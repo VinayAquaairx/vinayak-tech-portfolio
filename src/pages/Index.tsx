@@ -48,14 +48,14 @@ const Index = () => {
       skills: ['MAVLink', 'Ardupilot', 'PX4', 'QGroundControl']
     },
     {
+      category: 'Simulation & Testing',
+      color: 'from-green-500 to-green-600',
+      skills: ['Gazebo', 'Ardupilot SITL', 'Path Planning']
+    },
+    {
       category: 'Web Development',
       color: 'from-purple-500 to-purple-600',
       skills: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'HTML/CSS']
-    },
-    {
-      category: 'Simulation & Testing',
-      color: 'from-cyan-500 to-cyan-600',
-      skills: ['Gazebo', 'Ardupilot SITL', 'Path Planning']
     },
     {
       category: 'Tools & Frameworks',
@@ -90,6 +90,7 @@ const Index = () => {
     },
     {
       title: 'Web-Based Ground Control Station',
+      subtitle: 'AquaAirX Professional Project',
       description: 'Full-fledged Ground Control Station to manage drone operations with real-time telemetry and mission planning',
       features: [
         'Pymavlink integration for seamless communication',
@@ -100,15 +101,12 @@ const Index = () => {
       ],
       tech: ['React.js', 'Node.js', 'Express.js', 'Pymavlink', 'MAVLink'],
       gradient: 'from-blue-500 to-cyan-600',
-      images: [
-        '/src/assets/images/projects/web-gcs/image1.png',
-        '/src/assets/images/projects/web-gcs/image2.png',
-        '/src/assets/images/projects/web-gcs/image3.png'
-      ],
+      companyProject: true,
       folder: 'web-gcs'
     },
     {
       title: 'Windows-Based Ground Control Station',
+      subtitle: 'AquaAirX Professional Project',
       description: 'Desktop Ground Control Station application with real-time telemetry visualization and drone control',
       features: [
         'MAVLink integration for drone communication',
@@ -119,11 +117,7 @@ const Index = () => {
       ],
       tech: ['C++', 'QML', 'Qt', 'MAVLink'],
       gradient: 'from-purple-500 to-violet-600',
-      images: [
-        '/src/assets/images/projects/windows-gcs/image1.png',
-        '/src/assets/images/projects/windows-gcs/image2.png',
-        '/src/assets/images/projects/windows-gcs/image3.png'
-      ],
+      companyProject: true,
       folder: 'windows-gcs'
     },
     {
@@ -189,7 +183,7 @@ const Index = () => {
     }
   ];
 
-  // Project Image Carousel Component with Zoom
+  // Project Image Carousel Component with Enhanced Zoom
   const ProjectCarousel = ({ images, title, folder }: { images: string[], title: string, folder: string }) => {
     const [currentImage, setCurrentImage] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
@@ -221,16 +215,18 @@ const Index = () => {
       });
     };
 
-    const toggleZoom = () => {
-      setIsZoomed(!isZoomed);
+    const handleMouseEnter = () => {
+      setIsHovered(true);
+      setIsZoomed(true);
+    };
+
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+      setIsZoomed(false);
     };
 
     return (
-      <div 
-        className="relative w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4 group"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <div className="relative w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4 group">
         {imageErrors[currentImage] ? (
           <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center text-gray-500">
             <div className="text-center">
@@ -239,51 +235,62 @@ const Index = () => {
             </div>
           </div>
         ) : (
-          <img 
-            src={images[currentImage]} 
-            alt={`${title} - Image ${currentImage + 1}`}
-            className={`w-full h-full object-cover transition-transform duration-300 cursor-pointer ${
-              isZoomed ? 'scale-150' : 'hover:scale-110'
-            }`}
-            onError={() => handleImageError(currentImage)}
-            onClick={toggleZoom}
-          />
+          <div 
+            className="relative w-full h-full overflow-hidden"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <img 
+              src={images[currentImage]} 
+              alt={`${title} - Image ${currentImage + 1}`}
+              className={`w-full h-full object-cover cursor-pointer transition-all duration-500 ease-out ${
+                isZoomed 
+                  ? 'scale-150 z-50 shadow-2xl rounded-lg' 
+                  : 'scale-100 hover:scale-110'
+              }`}
+              onError={() => handleImageError(currentImage)}
+              style={{
+                transformOrigin: 'center center',
+              }}
+            />
+            
+            {/* Overlay for better visibility when zoomed */}
+            {isZoomed && (
+              <div className="absolute inset-0 bg-black/20 pointer-events-none z-40" />
+            )}
+          </div>
         )}
 
-        {/* Zoom indicator */}
-        <button
-          onClick={toggleZoom}
-          className="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        >
-          {isZoomed ? <ZoomOut className="w-4 h-4" /> : <ZoomIn className="w-4 h-4" />}
-        </button>
-        
-        {/* Navigation arrows */}
-        <button
-          onClick={prevImage}
-          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-        <button
-          onClick={nextImage}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
-
-        {/* Dots indicator */}
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {images.map((_, index) => (
+        {/* Navigation arrows - only show when not zoomed */}
+        {!isZoomed && (
+          <>
             <button
-              key={index}
-              onClick={() => setCurrentImage(index)}
-              className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                index === currentImage ? 'bg-white' : 'bg-white/50'
-              }`}
-            />
-          ))}
-        </div>
+              onClick={prevImage}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+            {/* Dots indicator */}
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImage(index)}
+                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                    index === currentImage ? 'bg-white' : 'bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     );
   };
@@ -536,26 +543,31 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Skills Section - Updated to Badge Display */}
+      {/* Skills Section - Redesigned */}
       <section id="skills" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Skills & Expertise</h2>
           <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
-            {skills.map((category, categoryIndex) => (
-              <Card key={category.category} className="bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <CardContent className="p-6">
-                  <div className={`bg-gradient-to-r ${category.color} text-white p-4 rounded-lg mb-6`}>
-                    <h3 className="text-lg font-semibold">{category.category}</h3>
+            {skills.map((category) => (
+              <Card 
+                key={category.category} 
+                className="bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group border-0"
+              >
+                <CardContent className="p-0">
+                  <div className={`bg-gradient-to-r ${category.color} text-white p-6 rounded-t-lg group-hover:shadow-lg transition-shadow duration-300`}>
+                    <h3 className="text-xl font-bold">{category.category}</h3>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {category.skills.map((skill, skillIndex) => (
-                      <span 
-                        key={skill} 
-                        className={`px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${category.color} hover:scale-105 transition-transform duration-200`}
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                  <div className="p-6">
+                    <div className="flex flex-wrap gap-3">
+                      {category.skills.map((skill) => (
+                        <span 
+                          key={skill} 
+                          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors duration-200 border border-gray-200"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -564,27 +576,37 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Projects Section with Image Carousels - Updated */}
+      {/* Projects Section - Updated */}
       <section id="projects" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Featured Projects</h2>
           <div className="grid lg:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <Card key={project.title} className={`bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${project.featured ? 'lg:col-span-2' : ''}`}>
                 <CardContent className="p-8">
-                  <ProjectCarousel images={project.images} title={project.title} folder={project.folder} />
-                  <div className={`bg-gradient-to-r ${project.gradient} text-white p-4 rounded-lg mb-6`}>
-                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                  {/* Only show carousel for projects with images */}
+                  {project.images && !project.companyProject && (
+                    <ProjectCarousel images={project.images} title={project.title} folder={project.folder} />
+                  )}
+                  
+                  <div className={`bg-gradient-to-r ${project.gradient} text-white p-6 rounded-lg mb-6`}>
+                    <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+                    {project.subtitle && (
+                      <p className="text-white/90 text-lg font-medium mb-2">{project.subtitle}</p>
+                    )}
                     {project.featured && (
                       <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">
                         Featured Project
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-600 mb-4">{project.description}</p>
+                  
+                  <p className="text-gray-600 mb-4 text-lg">{project.description}</p>
+                  
                   {project.status && (
                     <p className="text-blue-600 font-medium mb-4">Status: {project.status}</p>
                   )}
+                  
                   <div className="mb-6">
                     <h4 className="font-semibold text-gray-900 mb-3">Key Features:</h4>
                     <ul className="space-y-2">
@@ -596,6 +618,7 @@ const Index = () => {
                       ))}
                     </ul>
                   </div>
+                  
                   <div className="mb-6">
                     <h4 className="font-semibold text-gray-900 mb-3">Tech Stack:</h4>
                     <div className="flex flex-wrap gap-2">
@@ -606,16 +629,6 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
-                  {/* Removed Live Demo buttons for company projects and Learn More buttons */}
-                  {(project.title === 'Virtual Keyboard using OpenCV' || 
-                    project.title === 'Flappy Bird - Unity Game' || 
-                    project.title === 'Havi-Ai Desktop Voice Assistant') && (
-                    <div className="flex gap-3">
-                      <Button variant="outline">
-                        View Details
-                      </Button>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
             ))}
