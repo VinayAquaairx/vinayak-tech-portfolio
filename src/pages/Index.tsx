@@ -183,21 +183,21 @@ const Index = () => {
     }
   ];
 
-  // Project Image Carousel Component with Enhanced Zoom
+  // Project Image Carousel Component with Breakout Zoom
   const ProjectCarousel = ({ images, title, folder }: { images: string[], title: string, folder: string }) => {
     const [currentImage, setCurrentImage] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
-    const [isZoomed, setIsZoomed] = useState(false);
+    const [isBreakoutZoomed, setIsBreakoutZoomed] = useState(false);
     const [imageErrors, setImageErrors] = useState<boolean[]>(new Array(images.length).fill(false));
 
     useEffect(() => {
-      if (!isHovered && !isZoomed) {
+      if (!isHovered && !isBreakoutZoomed) {
         const interval = setInterval(() => {
           setCurrentImage((prev) => (prev + 1) % images.length);
         }, 3000);
         return () => clearInterval(interval);
       }
-    }, [images.length, isHovered, isZoomed]);
+    }, [images.length, isHovered, isBreakoutZoomed]);
 
     const nextImage = () => {
       setCurrentImage((prev) => (prev + 1) % images.length);
@@ -215,83 +215,98 @@ const Index = () => {
       });
     };
 
-    const handleMouseEnter = () => {
+    const handleImageHover = () => {
       setIsHovered(true);
-      setIsZoomed(true);
+      setIsBreakoutZoomed(true);
     };
 
-    const handleMouseLeave = () => {
+    const handleImageLeave = () => {
       setIsHovered(false);
-      setIsZoomed(false);
+      setIsBreakoutZoomed(false);
     };
 
     return (
-      <div className="relative w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4 group">
-        {imageErrors[currentImage] ? (
-          <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center text-gray-500">
-            <div className="text-center">
-              <span className="text-sm font-medium block">{title}</span>
-              <span className="text-xs text-gray-400 mt-1">Add images to: src/assets/images/projects/{folder}/</span>
+      <>
+        <div className="relative w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4 group">
+          {imageErrors[currentImage] ? (
+            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center text-gray-500">
+              <div className="text-center">
+                <span className="text-sm font-medium block">{title}</span>
+                <span className="text-xs text-gray-400 mt-1">Add images to: src/assets/images/projects/{folder}/</span>
+              </div>
             </div>
-          </div>
-        ) : (
+          ) : (
+            <div className="relative w-full h-full overflow-hidden">
+              <img 
+                src={images[currentImage]} 
+                alt={`${title} - Image ${currentImage + 1}`}
+                className="w-full h-full object-cover cursor-pointer transition-all duration-300 hover:scale-105"
+                onError={() => handleImageError(currentImage)}
+                onMouseEnter={handleImageHover}
+                onMouseLeave={handleImageLeave}
+              />
+            </div>
+          )}
+
+          {/* Navigation arrows - only show when not hovered */}
+          {!isHovered && (
+            <>
+              <button
+                onClick={prevImage}
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+
+              {/* Dots indicator */}
+              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30">
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImage(index)}
+                    className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                      index === currentImage ? 'bg-white' : 'bg-white/50'
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Breakout Zoom Overlay */}
+        {isBreakoutZoomed && !imageErrors[currentImage] && (
           <div 
-            className="relative w-full h-full overflow-hidden"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            className="fixed inset-0 z-[9999] flex items-center justify-center animate-fade-in"
+            onMouseLeave={handleImageLeave}
           >
-            <img 
-              src={images[currentImage]} 
-              alt={`${title} - Image ${currentImage + 1}`}
-              className={`w-full h-full object-cover cursor-pointer transition-all duration-500 ease-out ${
-                isZoomed 
-                  ? 'scale-150 z-50 shadow-2xl rounded-lg' 
-                  : 'scale-100 hover:scale-110'
-              }`}
-              onError={() => handleImageError(currentImage)}
-              style={{
-                transformOrigin: 'center center',
-              }}
-            />
+            {/* Dark backdrop */}
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             
-            {/* Overlay for better visibility when zoomed */}
-            {isZoomed && (
-              <div className="absolute inset-0 bg-black/20 pointer-events-none z-40" />
-            )}
+            {/* Breakout image */}
+            <div className="relative z-10 max-w-[90vw] max-h-[90vh] p-4">
+              <img 
+                src={images[currentImage]} 
+                alt={`${title} - Full Image ${currentImage + 1}`}
+                className="w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-300 animate-scale-in"
+                style={{ maxWidth: '90vw', maxHeight: '90vh' }}
+              />
+              
+              {/* Image title overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent text-white p-4 rounded-b-lg">
+                <h4 className="text-lg font-semibold">{title}</h4>
+                <p className="text-sm text-gray-300">Image {currentImage + 1} of {images.length}</p>
+              </div>
+            </div>
           </div>
         )}
-
-        {/* Navigation arrows - only show when not zoomed */}
-        {!isZoomed && (
-          <>
-            <button
-              onClick={prevImage}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-
-            {/* Dots indicator */}
-            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30">
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImage(index)}
-                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                    index === currentImage ? 'bg-white' : 'bg-white/50'
-                  }`}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+      </>
     );
   };
 
