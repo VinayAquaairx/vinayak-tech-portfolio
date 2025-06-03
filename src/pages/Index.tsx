@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, ArrowDown, ArrowUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, ArrowDown, ArrowUp, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -40,55 +40,27 @@ const Index = () => {
     {
       category: 'Programming',
       color: 'from-blue-500 to-blue-600',
-      skills: [
-        { name: 'Python', level: 90 },
-        { name: 'C++', level: 85 },
-        { name: 'JavaScript', level: 88 },
-        { name: 'SQL', level: 80 },
-        { name: 'Linux Commands', level: 85 }
-      ]
+      skills: ['Python', 'C++', 'JavaScript', 'SQL', 'Linux Commands']
     },
     {
       category: 'GCS & Communication',
       color: 'from-orange-500 to-orange-600',
-      skills: [
-        { name: 'MAVLink', level: 95 },
-        { name: 'Ardupilot', level: 90 },
-        { name: 'PX4', level: 85 },
-        { name: 'QGroundControl', level: 88 }
-      ]
+      skills: ['MAVLink', 'Ardupilot', 'PX4', 'QGroundControl']
     },
     {
       category: 'Web Development',
       color: 'from-purple-500 to-purple-600',
-      skills: [
-        { name: 'React.js', level: 92 },
-        { name: 'Node.js', level: 88 },
-        { name: 'Express.js', level: 85 },
-        { name: 'MongoDB', level: 82 },
-        { name: 'HTML/CSS', level: 90 }
-      ]
+      skills: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'HTML/CSS']
     },
     {
       category: 'Simulation & Testing',
       color: 'from-cyan-500 to-cyan-600',
-      skills: [
-        { name: 'Gazebo', level: 88 },
-        { name: 'Ardupilot SITL', level: 90 },
-        { name: 'Path Planning', level: 85 }
-      ]
+      skills: ['Gazebo', 'Ardupilot SITL', 'Path Planning']
     },
     {
       category: 'Tools & Frameworks',
       color: 'from-teal-500 to-teal-600',
-      skills: [
-        { name: 'Qt Creator', level: 85 },
-        { name: 'Pymavlink', level: 92 },
-        { name: 'ROS2', level: 80 },
-        { name: 'Power BI', level: 88 },
-        { name: 'Unity', level: 85 },
-        { name: 'Git', level: 90 }
-      ]
+      skills: ['Qt Creator', 'Pymavlink', 'ROS2', 'Power BI', 'Unity', 'Git']
     }
   ];
 
@@ -107,7 +79,6 @@ const Index = () => {
       ],
       tech: ['React.js', 'Node.js', 'AI/ML APIs', 'MongoDB', 'Express.js'],
       status: 'Currently under development',
-      liveUrl: 'https://plantsage.netlify.app/',
       featured: true,
       gradient: 'from-green-500 to-emerald-600',
       images: [
@@ -128,7 +99,6 @@ const Index = () => {
         'Mission planning tools'
       ],
       tech: ['React.js', 'Node.js', 'Express.js', 'Pymavlink', 'MAVLink'],
-      liveUrl: 'https://aquaairx.netlify.app/',
       gradient: 'from-blue-500 to-cyan-600',
       images: [
         '/src/assets/images/projects/web-gcs/image1.png',
@@ -219,20 +189,21 @@ const Index = () => {
     }
   ];
 
-  // Project Image Carousel Component
+  // Project Image Carousel Component with Zoom
   const ProjectCarousel = ({ images, title, folder }: { images: string[], title: string, folder: string }) => {
     const [currentImage, setCurrentImage] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
+    const [isZoomed, setIsZoomed] = useState(false);
     const [imageErrors, setImageErrors] = useState<boolean[]>(new Array(images.length).fill(false));
 
     useEffect(() => {
-      if (!isHovered) {
+      if (!isHovered && !isZoomed) {
         const interval = setInterval(() => {
           setCurrentImage((prev) => (prev + 1) % images.length);
         }, 3000);
         return () => clearInterval(interval);
       }
-    }, [images.length, isHovered]);
+    }, [images.length, isHovered, isZoomed]);
 
     const nextImage = () => {
       setCurrentImage((prev) => (prev + 1) % images.length);
@@ -248,6 +219,10 @@ const Index = () => {
         newErrors[index] = true;
         return newErrors;
       });
+    };
+
+    const toggleZoom = () => {
+      setIsZoomed(!isZoomed);
     };
 
     return (
@@ -267,10 +242,21 @@ const Index = () => {
           <img 
             src={images[currentImage]} 
             alt={`${title} - Image ${currentImage + 1}`}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover transition-transform duration-300 cursor-pointer ${
+              isZoomed ? 'scale-150' : 'hover:scale-110'
+            }`}
             onError={() => handleImageError(currentImage)}
+            onClick={toggleZoom}
           />
         )}
+
+        {/* Zoom indicator */}
+        <button
+          onClick={toggleZoom}
+          className="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          {isZoomed ? <ZoomOut className="w-4 h-4" /> : <ZoomIn className="w-4 h-4" />}
+        </button>
         
         {/* Navigation arrows */}
         <button
@@ -550,7 +536,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Skills Section */}
+      {/* Skills Section - Updated to Badge Display */}
       <section id="skills" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Skills & Expertise</h2>
@@ -561,20 +547,14 @@ const Index = () => {
                   <div className={`bg-gradient-to-r ${category.color} text-white p-4 rounded-lg mb-6`}>
                     <h3 className="text-lg font-semibold">{category.category}</h3>
                   </div>
-                  <div className="space-y-4">
+                  <div className="flex flex-wrap gap-2">
                     {category.skills.map((skill, skillIndex) => (
-                      <div key={skill.name}>
-                        <div className="flex justify-between mb-2">
-                          <span className="text-sm font-medium text-gray-700">{skill.name}</span>
-                          <span className="text-sm text-gray-500">{skill.level}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full bg-gradient-to-r ${category.color} transition-all duration-1000 ease-out`}
-                            style={{ width: `${skill.level}%` }}
-                          ></div>
-                        </div>
-                      </div>
+                      <span 
+                        key={skill} 
+                        className={`px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${category.color} hover:scale-105 transition-transform duration-200`}
+                      >
+                        {skill}
+                      </span>
                     ))}
                   </div>
                 </CardContent>
@@ -584,7 +564,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Projects Section with Image Carousels */}
+      {/* Projects Section with Image Carousels - Updated */}
       <section id="projects" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Featured Projects</h2>
@@ -592,7 +572,7 @@ const Index = () => {
             {projects.map((project, index) => (
               <Card key={project.title} className={`bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${project.featured ? 'lg:col-span-2' : ''}`}>
                 <CardContent className="p-8">
-                  <ProjectCarousel images={project.images} title={project.title} />
+                  <ProjectCarousel images={project.images} title={project.title} folder={project.folder} />
                   <div className={`bg-gradient-to-r ${project.gradient} text-white p-4 rounded-lg mb-6`}>
                     <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                     {project.featured && (
@@ -626,20 +606,16 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="flex gap-3">
-                    {project.liveUrl && (
-                      <Button 
-                        onClick={() => window.open(project.liveUrl, '_blank')}
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Live Demo
+                  {/* Removed Live Demo buttons for company projects and Learn More buttons */}
+                  {(project.title === 'Virtual Keyboard using OpenCV' || 
+                    project.title === 'Flappy Bird - Unity Game' || 
+                    project.title === 'Havi-Ai Desktop Voice Assistant') && (
+                    <div className="flex gap-3">
+                      <Button variant="outline">
+                        View Details
                       </Button>
-                    )}
-                    <Button variant="outline">
-                      Learn More
-                    </Button>
-                  </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
