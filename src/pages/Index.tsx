@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Github, Linkedin, Mail, Phone, MapPin, Download, ChevronLeft, ChevronRight, Moon, Sun, Code, Star, GitBranch, Calendar, ExternalLink, Trophy, Target, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
 
 const Index = () => {
@@ -118,12 +120,12 @@ const Index = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Scroll spy functionality
+  // Scroll spy functionality - Fixed
   useEffect(() => {
     setIsLoaded(true);
 
     const handleScroll = () => {
-      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'github', 'timeline', 'contact'];
+      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'timeline', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -152,79 +154,36 @@ const Index = () => {
     document.documentElement.classList.toggle('dark');
   };
 
-  // Enhanced Skills Data with XP and achievements
+  // Redesigned Skills Data - Clean and Professional
   const skills = [
     {
       category: 'Programming',
       color: 'from-blue-500 to-blue-600',
-      xp: 85,
-      level: 'Expert',
-      achievements: ['Code Master', 'Algorithm Ninja'],
-      skills: [
-        { name: 'Python', level: 90, projects: 8 },
-        { name: 'C++', level: 85, projects: 5 },
-        { name: 'JavaScript', level: 80, projects: 12 },
-        { name: 'SQL', level: 75, projects: 6 },
-        { name: 'Linux Commands', level: 85, projects: 10 }
-      ]
+      skills: ['Python', 'C++', 'JavaScript', 'SQL', 'Linux Commands']
     },
     {
       category: 'GCS & Communication',
       color: 'from-orange-500 to-orange-600',
-      xp: 92,
-      level: 'Expert',
-      achievements: ['UAV Master', 'Communication Pro'],
-      skills: [
-        { name: 'MAVLink', level: 95, projects: 4 },
-        { name: 'Ardupilot', level: 90, projects: 3 },
-        { name: 'PX4', level: 85, projects: 2 },
-        { name: 'QGroundControl', level: 88, projects: 4 }
-      ]
+      skills: ['MAVLink', 'Ardupilot', 'PX4', 'QGroundControl']
     },
     {
       category: 'Simulation & Testing',
       color: 'from-green-500 to-green-600',
-      xp: 78,
-      level: 'Advanced',
-      achievements: ['Simulation Expert', 'Testing Guru'],
-      skills: [
-        { name: 'Gazebo', level: 80, projects: 3 },
-        { name: 'Ardupilot SITL', level: 85, projects: 4 },
-        { name: 'Path Planning', level: 75, projects: 2 }
-      ]
+      skills: ['Gazebo', 'Ardupilot SITL', 'Path Planning']
     },
     {
       category: 'Web Development',
       color: 'from-purple-500 to-purple-600',
-      xp: 88,
-      level: 'Expert',
-      achievements: ['Full Stack Hero', 'React Master'],
-      skills: [
-        { name: 'React.js', level: 90, projects: 8 },
-        { name: 'Node.js', level: 85, projects: 6 },
-        { name: 'Express.js', level: 80, projects: 5 },
-        { name: 'MongoDB', level: 75, projects: 4 },
-        { name: 'HTML/CSS', level: 95, projects: 15 }
-      ]
+      skills: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'HTML/CSS']
     },
     {
       category: 'Tools & Frameworks',
       color: 'from-teal-500 to-teal-600',
-      xp: 82,
-      level: 'Advanced',
-      achievements: ['Tool Master', 'Framework Expert'],
-      skills: [
-        { name: 'Qt Creator', level: 85, projects: 3 },
-        { name: 'Pymavlink', level: 90, projects: 4 },
-        { name: 'ROS2', level: 75, projects: 2 },
-        { name: 'Power BI', level: 70, projects: 2 },
-        { name: 'Unity', level: 80, projects: 3 },
-        { name: 'Git', level: 95, projects: 20 }
-      ]
+      skills: ['Qt Creator', 'Pymavlink', 'ROS2', 'Power BI', 'Unity', 'Git']
     }
   ];
 
-  // Enhanced Projects Data with code snippets and metrics
+  // Enhanced Projects Data with image carousels
   const projects = [
     {
       title: 'PlantSage - AI Plant Identification System',
@@ -243,13 +202,6 @@ const Index = () => {
       featured: true,
       gradient: 'from-green-500 to-emerald-600',
       metrics: { lines: '15,000+', time: '3 months', team: 'Solo' },
-      codeSnippet: `const identifyPlant = async (imageData) => {
-  const response = await fetch('/api/identify', {
-    method: 'POST',
-    body: JSON.stringify({ image: imageData })
-  });
-  return response.json();
-};`,
       images: [
         '/src/assets/images/projects/plantsage/image1.png',
         '/src/assets/images/projects/plantsage/image2.png',
@@ -272,11 +224,11 @@ const Index = () => {
       gradient: 'from-blue-500 to-cyan-600',
       companyProject: true,
       metrics: { lines: '25,000+', time: '6 months', team: '3 developers' },
-      codeSnippet: `const mavlinkConnection = new MAVLinkConnection({
-  protocol: 'tcp',
-  port: 5760,
-  onMessage: handleTelemetry
-});`,
+      images: [
+        '/src/assets/images/projects/web-gcs/image1.png',
+        '/src/assets/images/projects/web-gcs/image2.png',
+        '/src/assets/images/projects/web-gcs/image3.png'
+      ],
       folder: 'web-gcs'
     },
     {
@@ -294,13 +246,6 @@ const Index = () => {
       gradient: 'from-purple-500 to-violet-600',
       companyProject: true,
       metrics: { lines: '30,000+', time: '8 months', team: '4 developers' },
-      codeSnippet: `class TelemetryWidget : public QWidget {
-  Q_OBJECT
-public:
-  void updateTelemetry(const MAVLinkMessage& msg);
-private slots:
-  void handleConnection();
-};`,
       folder: 'windows-gcs'
     },
     {
@@ -316,11 +261,6 @@ private slots:
       ],
       tech: ['Python', 'OpenCV', 'MediaPipe', 'CVZone', 'PyAutoGUI'],
       gradient: 'from-indigo-500 to-purple-600',
-      images: [
-        '/src/assets/images/projects/virtual-keyboard/image1.png',
-        '/src/assets/images/projects/virtual-keyboard/image2.png',
-        '/src/assets/images/projects/virtual-keyboard/image3.png'
-      ],
       folder: 'virtual-keyboard'
     },
     {
@@ -337,11 +277,6 @@ private slots:
       ],
       tech: ['Unity', 'C#', '2D Physics', 'Animation System'],
       gradient: 'from-yellow-500 to-orange-600',
-      images: [
-        '/src/assets/images/projects/flappy-bird/image1.png',
-        '/src/assets/images/projects/flappy-bird/image2.png',
-        '/src/assets/images/projects/flappy-bird/image3.png'
-      ],
       folder: 'flappy-bird'
     },
     {
@@ -357,58 +292,32 @@ private slots:
       ],
       tech: ['Python', 'NLP', 'Speech Recognition'],
       gradient: 'from-pink-500 to-rose-600',
-      images: [
-        '/src/assets/images/projects/havi-ai/image1.png',
-        '/src/assets/images/projects/havi-ai/image2.png',
-        '/src/assets/images/projects/havi-ai/image3.png'
-      ],
       folder: 'havi-ai'
     }
   ];
 
-  // GitHub stats (mock data - in production, fetch from GitHub API)
-  const githubStats = {
-    contributions: 1247,
-    repositories: 24,
-    stars: 89,
-    followers: 45,
-    languages: [
-      { name: 'JavaScript', percentage: 35, color: '#f1e05a' },
-      { name: 'Python', percentage: 30, color: '#3572A5' },
-      { name: 'C++', percentage: 20, color: '#f34b7d' },
-      { name: 'TypeScript', percentage: 15, color: '#2b7489' }
-    ]
-  };
-
-  // Timeline data
+  // Timeline data - Updated with 3 items and education
   const timeline = [
     {
       year: '2020',
       title: 'Started CSE Journey',
-      description: 'Began Bachelor of Technology at LPU',
+      description: 'Began Bachelor of Technology (CSE Honors) at Lovely Professional University',
       type: 'education',
-      skills: ['Programming Basics', 'Data Structures']
-    },
-    {
-      year: '2022',
-      title: 'First Internship',
-      description: 'Web Development projects',
-      type: 'work',
-      skills: ['React', 'Node.js', 'MongoDB']
+      icon: '🎓'
     },
     {
       year: '2023',
       title: 'AEROGO Internship',
-      description: 'Business Development Analyst',
+      description: 'Business Development Analyst - Specialized in data visualization and market research for UAV technologies',
       type: 'work',
-      skills: ['Power BI', 'Data Analysis']
+      icon: '💼'
     },
     {
       year: '2024',
-      title: 'AquaAirX Role',
-      description: 'Software Development Engineer',
+      title: 'AquaAirX Software Engineer',
+      description: 'Software Development Engineer - Leading Ground Control Station development for UAV and underwater vehicles',
       type: 'work',
-      skills: ['MAVLink', 'GCS Development', 'Qt']
+      icon: '🚀'
     }
   ];
 
@@ -446,7 +355,7 @@ private slots:
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-            onMouseLeave={() => setBreakoutImage(null)}
+            onClick={() => setBreakoutImage(null)}
           >
             <motion.img
               src={breakoutImage.url}
@@ -461,7 +370,7 @@ private slots:
         )}
       </AnimatePresence>
 
-      {/* Enhanced Navigation */}
+      {/* Enhanced Navigation - Updated */}
       <nav className={`fixed top-0 left-0 right-0 backdrop-blur-md border-b z-50 transition-colors duration-500 ${
         darkMode ? 'bg-gray-900/90 border-gray-700' : 'bg-white/90 border-gray-200'
       }`}>
@@ -474,7 +383,7 @@ private slots:
               K.S.S.Vinayak
             </motion.div>
             <div className="hidden md:flex space-x-8">
-              {['Home', 'About', 'Experience', 'Skills', 'Projects', 'GitHub', 'Timeline', 'Contact'].map((item) => (
+              {['Home', 'About', 'Experience', 'Skills', 'Projects', 'Timeline', 'Contact'].map((item) => (
                 <motion.button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
@@ -717,91 +626,7 @@ private slots:
         </div>
       </section>
 
-      {/* GitHub Integration Section */}
-      <section id="github" className={`py-20 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h2 
-            className={`text-4xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Github className="inline-block w-10 h-10 mr-4" />
-            GitHub Stats & Activity
-          </motion.h2>
-          
-          <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-8 mb-12">
-            {[
-              { icon: Code, label: 'Contributions', value: githubStats.contributions, color: 'green' },
-              { icon: GitBranch, label: 'Repositories', value: githubStats.repositories, color: 'blue' },
-              { icon: Star, label: 'Stars Earned', value: githubStats.stars, color: 'yellow' },
-              { icon: Github, label: 'Followers', value: githubStats.followers, color: 'purple' }
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-              >
-                <Card className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} shadow-lg hover:shadow-xl transition-all duration-300`}>
-                  <CardContent className="p-6 text-center">
-                    <stat.icon className={`w-8 h-8 mx-auto mb-4 text-${stat.color}-500`} />
-                    <motion.div 
-                      className={`text-3xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      transition={{ duration: 0.8, delay: index * 0.2 }}
-                    >
-                      {stat.value}
-                    </motion.div>
-                    <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Language Distribution */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Card className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} shadow-lg`}>
-              <CardContent className="p-8">
-                <h3 className={`text-2xl font-bold mb-6 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Most Used Languages
-                </h3>
-                <div className="space-y-4">
-                  {githubStats.languages.map((lang, index) => (
-                    <div key={lang.name} className="flex items-center gap-4">
-                      <div className="w-4 h-4 rounded-full" style={{ backgroundColor: lang.color }}></div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{lang.name}</span>
-                          <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{lang.percentage}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <motion.div 
-                            className="h-2 rounded-full"
-                            style={{ backgroundColor: lang.color }}
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${lang.percentage}%` }}
-                            transition={{ duration: 1, delay: index * 0.2 }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Interactive Timeline Section */}
+      {/* Interactive Timeline Section - Redesigned */}
       <section id="timeline" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
@@ -811,59 +636,60 @@ private slots:
             transition={{ duration: 0.6 }}
           >
             <Calendar className="inline-block w-10 h-10 mr-4" />
-            My Journey Timeline
+            My Journey
           </motion.h2>
           
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 to-purple-500"></div>
+          <div className="relative max-w-4xl mx-auto">
+            {/* Modern Timeline Line */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500 rounded-full shadow-lg"></div>
             
-            <div className="space-y-12">
+            <div className="space-y-16">
               {timeline.map((item, index) => (
                 <motion.div
                   key={item.year}
-                  className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                  className={`relative flex items-center ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  transition={{ duration: 0.8, delay: index * 0.3 }}
                 >
-                  {/* Timeline Dot */}
-                  <div className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-blue-500 rounded-full border-4 border-white dark:border-gray-800"></div>
+                  {/* Timeline Dot with Icon */}
+                  <motion.div 
+                    className="absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center text-2xl z-10"
+                    whileHover={{ scale: 1.2, rotate: 360 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {item.icon}
+                  </motion.div>
                   
                   {/* Content Card */}
-                  <div className={`ml-20 md:ml-0 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'} md:w-5/12`}>
+                  <div className={`w-5/12 ${index % 2 === 0 ? 'pr-8' : 'pl-8'}`}>
                     <motion.div
-                      whileHover={{ scale: 1.05, y: -5 }}
-                      className={`p-6 rounded-lg shadow-lg ${
+                      whileHover={{ scale: 1.05, y: -10 }}
+                      className={`p-8 rounded-2xl shadow-2xl ${
                         darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'
-                      } border`}
+                      } border-2 backdrop-blur-sm`}
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl font-bold text-blue-500">{item.year}</span>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          item.type === 'education' 
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                            : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-                        }`}>
-                          {item.type}
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                          {item.year}
                         </span>
+                        <Badge 
+                          variant={item.type === 'education' ? 'secondary' : 'default'}
+                          className={`text-xs font-medium ${
+                            item.type === 'education' 
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                              : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                          }`}
+                        >
+                          {item.type}
+                        </Badge>
                       </div>
-                      <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h3 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         {item.title}
                       </h3>
-                      <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <p className={`text-lg leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         {item.description}
                       </p>
-                      <div className="flex flex-wrap gap-2">
-                        {item.skills.map((skill) => (
-                          <span 
-                            key={skill}
-                            className="px-3 py-1 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full text-sm"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
                     </motion.div>
                   </div>
                 </motion.div>
@@ -873,7 +699,7 @@ private slots:
         </div>
       </section>
 
-      {/* Enhanced Skills Section - Gamified */}
+      {/* Redesigned Skills Section */}
       <section id="skills" className={`py-20 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
@@ -882,8 +708,8 @@ private slots:
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Trophy className="inline-block w-10 h-10 mr-4" />
-            Skills & Achievements
+            <Target className="inline-block w-10 h-10 mr-4" />
+            Skills & Expertise
           </motion.h2>
           <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
             {skills.map((category, index) => (
@@ -894,90 +720,34 @@ private slots:
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 whileHover={{ scale: 1.02, y: -5 }}
               >
-                <Card className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} shadow-lg hover:shadow-xl transition-all duration-300 group border-0 overflow-hidden`}>
+                <Card className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border-0`}>
                   <CardContent className="p-0">
-                    {/* Gradient Header with Level & XP */}
-                    <div className={`bg-gradient-to-r ${category.color} text-white p-6 group-hover:shadow-lg transition-shadow duration-300`}>
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-xl font-bold">{category.category}</h3>
-                        <div className="text-right">
-                          <div className="text-sm opacity-90">Level</div>
-                          <div className="text-lg font-bold">{category.level}</div>
-                        </div>
-                      </div>
-                      
-                      {/* XP Bar */}
-                      <div className="mb-4">
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>XP</span>
-                          <span>{category.xp}/100</span>
-                        </div>
-                        <div className="w-full bg-white/20 rounded-full h-2">
-                          <motion.div 
-                            className="bg-white h-2 rounded-full"
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${category.xp}%` }}
-                            transition={{ duration: 1, delay: index * 0.2 }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Achievement Badges */}
-                      <div className="flex gap-2">
-                        {category.achievements.map((achievement) => (
-                          <motion.span 
-                            key={achievement}
-                            className="px-2 py-1 bg-white/20 rounded-full text-xs"
-                            whileHover={{ scale: 1.1 }}
-                          >
-                            🏆 {achievement}
-                          </motion.span>
-                        ))}
-                      </div>
+                    {/* Gradient Header */}
+                    <div className={`bg-gradient-to-r ${category.color} text-white p-6`}>
+                      <h3 className="text-xl font-bold text-center">{category.category}</h3>
                     </div>
 
-                    {/* Skills List */}
+                    {/* Skills Grid */}
                     <div className="p-6">
-                      <div className="grid gap-3">
+                      <div className="flex flex-wrap gap-3">
                         {category.skills.map((skill, skillIndex) => (
                           <motion.div
-                            key={skill.name}
-                            className="group/skill"
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: skillIndex * 0.1 }}
+                            key={skill}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, delay: skillIndex * 0.05 }}
+                            whileHover={{ scale: 1.05 }}
                           >
-                            <div className="flex items-center justify-between mb-2">
-                              <span className={`font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                                {skill.name}
-                              </span>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-500">
-                                  {skill.projects} projects
-                                </span>
-                                <span className={`text-sm font-bold ${
-                                  skill.level >= 90 ? 'text-green-500' :
-                                  skill.level >= 75 ? 'text-blue-500' :
-                                  skill.level >= 60 ? 'text-yellow-500' : 'text-gray-500'
-                                }`}>
-                                  {skill.level >= 90 ? '⭐⭐⭐' :
-                                   skill.level >= 75 ? '⭐⭐' :
-                                   skill.level >= 60 ? '⭐' : '○'}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                              <motion.div 
-                                className={`h-2 rounded-full ${
-                                  skill.level >= 90 ? 'bg-green-500' :
-                                  skill.level >= 75 ? 'bg-blue-500' :
-                                  skill.level >= 60 ? 'bg-yellow-500' : 'bg-gray-500'
-                                }`}
-                                initial={{ width: 0 }}
-                                whileInView={{ width: `${skill.level}%` }}
-                                transition={{ duration: 1, delay: skillIndex * 0.1 }}
-                              />
-                            </div>
+                            <Badge 
+                              variant="secondary"
+                              className={`px-4 py-2 text-sm font-medium rounded-full ${
+                                darkMode 
+                                  ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
+                                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                              } transition-colors duration-200`}
+                            >
+                              {skill}
+                            </Badge>
                           </motion.div>
                         ))}
                       </div>
@@ -1089,7 +859,7 @@ private slots:
         </div>
       </section>
 
-      {/* Enhanced Projects Section with Code Snippets */}
+      {/* Enhanced Projects Section with Image Carousels */}
       <section id="projects" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
@@ -1123,9 +893,9 @@ private slots:
                           )}
                         </div>
                         {project.featured && (
-                          <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">
+                          <Badge className="bg-white/20 text-white border-white/30">
                             ⭐ Featured
-                          </span>
+                          </Badge>
                         )}
                       </div>
                       
@@ -1147,6 +917,40 @@ private slots:
                         </div>
                       )}
                     </div>
+
+                    {/* Image Carousel */}
+                    {project.images && (
+                      <div className="mb-6">
+                        <Carousel className="w-full">
+                          <CarouselContent>
+                            {project.images.map((image, imgIndex) => (
+                              <CarouselItem key={imgIndex}>
+                                <div className="relative group">
+                                  <motion.img
+                                    src={image}
+                                    alt={`${project.title} Screenshot ${imgIndex + 1}`}
+                                    className="w-full h-64 object-cover rounded-lg cursor-pointer"
+                                    whileHover={{ scale: 1.02 }}
+                                    onMouseEnter={(e) => {
+                                      const rect = e.currentTarget.getBoundingClientRect();
+                                      setBreakoutImage({
+                                        url: image,
+                                        x: rect.left + rect.width / 2,
+                                        y: rect.top + rect.height / 2
+                                      });
+                                    }}
+                                    onMouseLeave={() => setBreakoutImage(null)}
+                                  />
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg"></div>
+                                </div>
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                          <CarouselPrevious />
+                          <CarouselNext />
+                        </Carousel>
+                      </div>
+                    )}
                     
                     <p className={`text-lg mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {project.description}
@@ -1180,21 +984,6 @@ private slots:
                         ))}
                       </ul>
                     </div>
-
-                    {/* Code Snippet */}
-                    {project.codeSnippet && (
-                      <div className="mb-6">
-                        <h4 className={`font-semibold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                          <Code className="inline-block w-4 h-4 mr-2" />
-                          Code Sample:
-                        </h4>
-                        <div className={`p-4 rounded-lg font-mono text-sm overflow-x-auto ${
-                          darkMode ? 'bg-gray-900 text-green-400' : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          <pre className="whitespace-pre-wrap">{project.codeSnippet}</pre>
-                        </div>
-                      </div>
-                    )}
                     
                     {/* Tech Stack */}
                     <div className="mb-6">
@@ -1203,43 +992,18 @@ private slots:
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {project.tech.map((tech) => (
-                          <motion.span 
-                            key={tech} 
-                            className={`px-3 py-1 rounded-full text-sm ${
-                              darkMode ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-gray-700'
-                            }`}
-                            whileHover={{ scale: 1.05 }}
-                          >
-                            {tech}
-                          </motion.span>
+                          <motion.div key={tech} whileHover={{ scale: 1.05 }}>
+                            <Badge 
+                              variant="secondary"
+                              className={`${
+                                darkMode ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-gray-700'
+                              }`}
+                            >
+                              {tech}
+                            </Badge>
+                          </motion.div>
                         ))}
                       </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-4">
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className={`${darkMode ? 'border-gray-500 text-gray-300 hover:bg-gray-600' : ''}`}
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          View Details
-                        </Button>
-                      </motion.div>
-                      {!project.companyProject && (
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className={`${darkMode ? 'border-gray-500 text-gray-300 hover:bg-gray-600' : ''}`}
-                          >
-                            <Github className="w-4 h-4 mr-2" />
-                            Source Code
-                          </Button>
-                        </motion.div>
-                      )}
                     </div>
                   </CardContent>
                 </Card>
