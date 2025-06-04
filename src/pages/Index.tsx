@@ -3,8 +3,11 @@ import { Github, Linkedin, Mail, Phone, MapPin, Download, ChevronLeft, ChevronRi
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Float, OrbitControls } from '@react-three/drei';
+
+// Three.js imports - conditionally render to avoid SSR issues
+const Canvas = React.lazy(() => import('@react-three/fiber').then(module => ({ default: module.Canvas })));
+const Float = React.lazy(() => import('@react-three/drei').then(module => ({ default: module.Float })));
+const OrbitControls = React.lazy(() => import('@react-three/drei').then(module => ({ default: module.OrbitControls })));
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -29,32 +32,40 @@ const Index = () => {
   const skillsRef = useRef(null);
   const projectsRef = useRef(null);
 
-  // 3D Scene Component
+  // 3D Scene Component - Simplified version without Three.js for now
   const HeroScene = () => {
     return (
-      <Canvas camera={{ position: [0, 0, 5] }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <Float speed={2} rotationIntensity={1} floatIntensity={0.5}>
-          <mesh position={[-2, 1, 0]}>
-            <boxGeometry args={[0.8, 0.8, 0.8]} />
-            <meshStandardMaterial color="#3b82f6" />
-          </mesh>
-        </Float>
-        <Float speed={1.5} rotationIntensity={0.8} floatIntensity={0.3}>
-          <mesh position={[2, -1, 0]}>
-            <sphereGeometry args={[0.6]} />
-            <meshStandardMaterial color="#8b5cf6" />
-          </mesh>
-        </Float>
-        <Float speed={2.5} rotationIntensity={1.2} floatIntensity={0.7}>
-          <mesh position={[0, 2, -1]}>
-            <coneGeometry args={[0.5, 1]} />
-            <meshStandardMaterial color="#10b981" />
-          </mesh>
-        </Float>
-        <OrbitControls enableZoom={false} enablePan={false} />
-      </Canvas>
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-green-500/10 animate-pulse"></div>
+        
+        {/* Floating geometric shapes using CSS */}
+        <motion.div
+          className="absolute top-20 left-20 w-16 h-16 bg-blue-500/30 rounded-lg backdrop-blur-sm"
+          animate={{ 
+            y: [0, -20, 0],
+            rotate: [0, 180, 360]
+          }}
+          transition={{ duration: 6, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute top-40 right-32 w-12 h-12 bg-purple-500/30 rounded-full backdrop-blur-sm"
+          animate={{ 
+            y: [0, 15, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-32 left-32 w-20 h-20 bg-green-500/30 backdrop-blur-sm"
+          style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
+          animate={{ 
+            y: [0, -10, 0],
+            rotate: [0, -180, -360]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+      </div>
     );
   };
 
@@ -118,7 +129,7 @@ const Index = () => {
 
     const handleScroll = () => {
       const sections = ['home', 'about', 'experience', 'skills', 'projects', 'github', 'timeline', 'contact'];
-      const scrollPosition = window.scrollY + 100; // Offset for navbar height
+      const scrollPosition = window.scrollY + 100;
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
@@ -498,7 +509,7 @@ private slots:
         </div>
       </nav>
 
-      {/* Enhanced Hero Section with 3D */}
+      {/* Enhanced Hero Section */}
       <section id="home" className={`pt-16 min-h-screen flex items-center relative overflow-hidden ${
         darkMode ? 'bg-gradient-to-br from-gray-900 to-blue-900' : 'bg-gradient-to-br from-blue-50 to-indigo-100'
       }`}>
