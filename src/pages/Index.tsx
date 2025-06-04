@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
-import { Float, Text3D, OrbitControls } from '@react-three/drei';
+import { Float, OrbitControls } from '@react-three/drei';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -14,6 +14,7 @@ const Index = () => {
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, symbol: string}>>([]);
+  const [breakoutImage, setBreakoutImage] = useState<{url: string, x: number, y: number} | null>(null);
 
   const codeSnippets = [
     "const developer = 'Vinayak';",
@@ -430,6 +431,29 @@ private slots:
       >
         <div className="w-full h-full bg-white rounded-full"></div>
       </motion.div>
+
+      {/* Image Breakout Overlay */}
+      <AnimatePresence>
+        {breakoutImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+            onMouseLeave={() => setBreakoutImage(null)}
+          >
+            <motion.img
+              src={breakoutImage.url}
+              alt="Project Screenshot"
+              className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Enhanced Navigation */}
       <nav className={`fixed top-0 left-0 right-0 backdrop-blur-md border-b z-50 transition-colors duration-500 ${
