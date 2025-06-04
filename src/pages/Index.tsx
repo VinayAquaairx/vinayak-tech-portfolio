@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, ArrowDown, ArrowUp, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { Github, Linkedin, Mail, Phone, MapPin, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -183,7 +183,7 @@ const Index = () => {
     }
   ];
 
-  // Project Image Carousel Component with Breakout Zoom
+  // Fixed Project Image Carousel Component with Breakout Zoom
   const ProjectCarousel = ({ images, title, folder }: { images: string[], title: string, folder: string }) => {
     const [currentImage, setCurrentImage] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
@@ -215,12 +215,12 @@ const Index = () => {
       });
     };
 
-    const handleImageHover = () => {
+    const handleMouseEnter = () => {
       setIsHovered(true);
       setIsBreakoutZoomed(true);
     };
 
-    const handleImageLeave = () => {
+    const handleMouseLeave = () => {
       setIsHovered(false);
       setIsBreakoutZoomed(false);
     };
@@ -242,8 +242,7 @@ const Index = () => {
                 alt={`${title} - Image ${currentImage + 1}`}
                 className="w-full h-full object-cover cursor-pointer transition-all duration-300 hover:scale-105"
                 onError={() => handleImageError(currentImage)}
-                onMouseEnter={handleImageHover}
-                onMouseLeave={handleImageLeave}
+                onMouseEnter={handleMouseEnter}
               />
             </div>
           )}
@@ -283,25 +282,36 @@ const Index = () => {
         {/* Breakout Zoom Overlay */}
         {isBreakoutZoomed && !imageErrors[currentImage] && (
           <div 
-            className="fixed inset-0 z-[9999] flex items-center justify-center animate-fade-in"
-            onMouseLeave={handleImageLeave}
+            className="fixed inset-0 z-[9999] flex items-center justify-center transition-all duration-300 ease-in-out"
+            onMouseLeave={handleMouseLeave}
           >
-            {/* Dark backdrop */}
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            {/* Dark backdrop with pointer events */}
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-fade-in" />
             
-            {/* Breakout image */}
-            <div className="relative z-10 max-w-[90vw] max-h-[90vh] p-4">
+            {/* Breakout image container */}
+            <div className="relative z-10 max-w-[85vw] max-h-[85vh] p-4 animate-scale-in">
               <img 
                 src={images[currentImage]} 
                 alt={`${title} - Full Image ${currentImage + 1}`}
-                className="w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-300 animate-scale-in"
-                style={{ maxWidth: '90vw', maxHeight: '90vh' }}
+                className="w-full h-full object-contain rounded-lg shadow-2xl transition-all duration-300"
+                style={{ 
+                  maxWidth: '85vw', 
+                  maxHeight: '85vh',
+                  userSelect: 'none',
+                  pointerEvents: 'none'
+                }}
+                onMouseEnter={handleMouseEnter}
               />
               
               {/* Image title overlay */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent text-white p-4 rounded-b-lg">
                 <h4 className="text-lg font-semibold">{title}</h4>
                 <p className="text-sm text-gray-300">Image {currentImage + 1} of {images.length}</p>
+              </div>
+
+              {/* Close indicator */}
+              <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
+                Hover away to close
               </div>
             </div>
           </div>
