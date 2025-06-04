@@ -4,11 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
 
-// Three.js imports - conditionally render to avoid SSR issues
-const Canvas = React.lazy(() => import('@react-three/fiber').then(module => ({ default: module.Canvas })));
-const Float = React.lazy(() => import('@react-three/drei').then(module => ({ default: module.Float })));
-const OrbitControls = React.lazy(() => import('@react-three/drei').then(module => ({ default: module.OrbitControls })));
-
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isLoaded, setIsLoaded] = useState(false);
@@ -32,7 +27,7 @@ const Index = () => {
   const skillsRef = useRef(null);
   const projectsRef = useRef(null);
 
-  // 3D Scene Component - Simplified version without Three.js for now
+  // 3D Scene Component - Pure CSS/Framer Motion implementation
   const HeroScene = () => {
     return (
       <div className="absolute inset-0 pointer-events-none">
