@@ -66,9 +66,9 @@ export const Hero: React.FC<HeroProps> = ({ darkMode, scrollToSection }) => {
             <h1 className={`text-4xl lg:text-5xl font-bold mb-6 leading-tight ${
               darkMode ? 'text-white' : 'text-gray-900'
             }`}>
-              GCS Developer &<br />
+              Software Developer &<br />
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                UAV Systems Engineer
+                Innovator
               </span>
             </h1>
             

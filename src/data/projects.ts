@@ -3,7 +3,7 @@ import { Project } from '@/types';
 
 export const projects: Project[] = [
   {
-    title: 'PlantSage - AI Plant Identification System',
+    title: 'PlantSage - AI Powered Plant Health Monitoring Platform',
     description: 'Advanced plant identification web application using AI/ML technology for accurate plant species recognition',
     features: [
       'AI-powered plant identification from images',
@@ -40,7 +40,7 @@ export const projects: Project[] = [
     tech: ['React.js', 'Node.js', 'Express.js', 'Pymavlink', 'MAVLink'],
     gradient: 'from-blue-500 to-cyan-600',
     companyProject: true,
-    metrics: { lines: '25,000+', time: '6 months', team: '3 developers' },
+    // metrics: { lines: '25,000+', time: '6 months', team: '3 developers' },
     folder: 'web-gcs'
   },
   {
@@ -57,7 +57,7 @@ export const projects: Project[] = [
     tech: ['C++', 'QML', 'Qt', 'MAVLink'],
     gradient: 'from-purple-500 to-violet-600',
     companyProject: true,
-    metrics: { lines: '30,000+', time: '8 months', team: '4 developers' },
+    // metrics: { lines: '30,000+', time: '8 months', team: '4 developers' },
     folder: 'windows-gcs'
   },
   {

@@ -26,7 +26,7 @@ export const About: React.FC<AboutProps> = ({ darkMode }) => {
             transition={{ duration: 0.6 }}
           >
             <p className={`text-base leading-relaxed mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              GCS Developer with <span className="font-semibold text-blue-600 dark:text-blue-400">11 months of hands-on experience</span> in building both web-based and software-based Ground Control Station for UAVs and underwater vehicles. Proficient in MAVLink, ROS2, and Ardupilot simulations, with a strong background in real-time telemetry, mission planning, and autonomous navigation.
+              GCS Developer with <span className="font-semibold text-blue-600 dark:text-blue-400">12 months of hands-on experience</span> in building both web-based and software-based Ground Control Station for UAVs and underwater vehicles. Proficient in MAVLink, ROS2, and Ardupilot simulations, with a strong background in real-time telemetry, mission planning, and autonomous navigation.
             </p>
             <p className={`text-base leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Passionate about improving drone autonomy through advanced control systems and simulation testing.
@@ -35,9 +35,9 @@ export const About: React.FC<AboutProps> = ({ darkMode }) => {
           <div className="grid grid-cols-2 gap-6">
             {[
               { value: '11+', label: 'Months Experience', color: 'blue' },
-              { value: '6+', label: 'UAV Projects', color: 'purple' },
+              { value: '2+', label: 'GCS Projects', color: 'purple' },
               { value: '3', label: 'Team Leadership', color: 'orange' },
-              { value: '40%', label: 'Performance Boost', color: 'green' }
+              { value: '60%', label: 'Performance Boost', color: 'green' }
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
