@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail, Phone, MapPin, Download, ChevronLeft, ChevronRight, Moon, Sun, Code, Star, GitBranch, Calendar, ExternalLink, Trophy, Target, Zap } from 'lucide-react';
+import { Github, Linkedin, Mail, Phone, MapPin, Download, ChevronLeft, ChevronRight, Moon, Sun, Code, Star, GitBranch, Calendar, ExternalLink, Trophy, Target, Zap, GraduationCap, Briefcase, Rocket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -66,10 +66,11 @@ const Index = () => {
     );
   };
 
-  // Enhanced Carousel Component with Auto-rotation and Click to Enlarge
+  // Enhanced Carousel Component with proper hover and click handling
   const ProjectCarousel = ({ images, projectTitle }: { images: string[], projectTitle: string }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
+    const [hoveredImage, setHoveredImage] = useState<string | null>(null);
 
     useEffect(() => {
       if (!isHovered && images.length > 1) {
@@ -81,6 +82,7 @@ const Index = () => {
     }, [images.length, isHovered]);
 
     const handleImageClick = (imageUrl: string, event: React.MouseEvent) => {
+      event.stopPropagation();
       const rect = event.currentTarget.getBoundingClientRect();
       setBreakoutImage({
         url: imageUrl,
@@ -89,35 +91,44 @@ const Index = () => {
       });
     };
 
+    const handleImageHover = (imageUrl: string, isEntering: boolean) => {
+      if (isEntering) {
+        setHoveredImage(imageUrl);
+        setIsHovered(true);
+      } else {
+        setHoveredImage(null);
+        setIsHovered(false);
+      }
+    };
+
     return (
-      <div 
-        className="relative mb-6"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <div className="relative mb-6">
         <Carousel className="w-full" opts={{ loop: true }}>
           <CarouselContent>
             {images.map((image, imgIndex) => (
               <CarouselItem key={imgIndex}>
-                <div className="relative group">
-                  <motion.img
+                <div 
+                  className="relative group cursor-pointer"
+                  onMouseEnter={() => handleImageHover(image, true)}
+                  onMouseLeave={() => handleImageHover(image, false)}
+                  onClick={(e) => handleImageClick(image, e)}
+                >
+                  <img
                     src={image}
                     alt={`${projectTitle} Screenshot ${imgIndex + 1}`}
-                    className="w-full h-48 object-cover rounded-lg cursor-pointer transition-all duration-300"
-                    whileHover={{ scale: 1.02 }}
-                    onClick={(e) => handleImageClick(image, e)}
+                    className="w-full h-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <span className="text-white font-medium bg-black/50 px-3 py-1 rounded-full text-sm">
-                      Click to enlarge
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <span className="text-white font-medium bg-black/60 px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+                      Click to view full image
                     </span>
                   </div>
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-2" />
-          <CarouselNext className="right-2" />
+          <CarouselPrevious className="left-2 bg-white/80 hover:bg-white border-0 shadow-lg" />
+          <CarouselNext className="right-2 bg-white/80 hover:bg-white border-0 shadow-lg" />
         </Carousel>
         
         {/* Dots indicator */}
@@ -125,8 +136,8 @@ const Index = () => {
           {images.map((_, index) => (
             <button
               key={index}
-              className={`w-2 h-2 rounded-full transition-colors duration-200 ${
-                index === currentIndex ? 'bg-blue-500' : 'bg-gray-300'
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex ? 'bg-blue-500 scale-110' : 'bg-gray-300 hover:bg-gray-400'
               }`}
               onClick={() => setCurrentIndex(index)}
             />
@@ -136,7 +147,6 @@ const Index = () => {
     );
   };
 
-  // Typing animation effect
   useEffect(() => {
     const currentCode = codeSnippets[currentCodeIndex];
     let currentIndex = 0;
@@ -157,7 +167,6 @@ const Index = () => {
     return () => clearInterval(typingInterval);
   }, [currentCodeIndex]);
 
-  // Particle system
   useEffect(() => {
     const symbols = ['<', '>', '{', '}', ';', '(', ')', '[', ']', '=', '+', '-'];
     const newParticles = Array.from({ length: 30 }, (_, i) => ({
@@ -180,7 +189,6 @@ const Index = () => {
     return () => clearInterval(particleInterval);
   }, []);
 
-  // Mouse tracking for cursor trail
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });
@@ -190,7 +198,6 @@ const Index = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Fixed scroll spy functionality
   useEffect(() => {
     setIsLoaded(true);
 
@@ -201,7 +208,7 @@ const Index = () => {
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
         if (section) {
-          const sectionTop = section.offsetTop - 80; // Account for fixed header
+          const sectionTop = section.offsetTop - 80;
           const sectionHeight = section.offsetHeight;
           
           if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
@@ -213,14 +220,14 @@ const Index = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Call once to set initial state
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 80; // Account for fixed header
+      const offset = 80;
       const elementPosition = element.offsetTop - offset;
       window.scrollTo({ 
         top: elementPosition, 
@@ -235,7 +242,6 @@ const Index = () => {
     document.documentElement.classList.toggle('dark');
   };
 
-  // Redesigned Skills Data - Clean and Professional
   const skills = [
     {
       category: 'Programming',
@@ -264,7 +270,6 @@ const Index = () => {
     }
   ];
 
-  // Enhanced Projects Data with image carousels
   const projects = [
     {
       title: 'PlantSage - AI Plant Identification System',
@@ -384,28 +389,27 @@ const Index = () => {
     }
   ];
 
-  // Timeline data - Updated with 3 items and education
   const timeline = [
     {
       year: '2020',
       title: 'Started CSE Journey',
       description: 'Began Bachelor of Technology (CSE Honors) at Lovely Professional University',
       type: 'education',
-      icon: '🎓'
+      icon: GraduationCap
     },
     {
       year: '2023',
       title: 'AEROGO Internship',
       description: 'Business Development Analyst - Specialized in data visualization and market research for UAV technologies',
       type: 'work',
-      icon: '💼'
+      icon: Briefcase
     },
     {
       year: '2024',
       title: 'AquaAirX Software Engineer',
       description: 'Software Development Engineer - Leading Ground Control Station development for UAV and underwater vehicles',
       type: 'work',
-      icon: '🚀'
+      icon: Rocket
     }
   ];
 
@@ -442,23 +446,26 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer"
             onClick={() => setBreakoutImage(null)}
           >
             <motion.img
               src={breakoutImage.url}
               alt="Project Screenshot"
-              className="max-w-[85vw] max-h-[85vh] object-contain rounded-lg shadow-2xl"
+              className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
               initial={{ scale: 0.3, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.3, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             />
+            <div className="absolute top-4 right-4 text-white bg-black/50 px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+              Click anywhere to close
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Enhanced Navigation - Fixed */}
+      {/* Fixed Navigation */}
       <nav className={`fixed top-0 left-0 right-0 backdrop-blur-md border-b z-50 transition-colors duration-500 ${
         darkMode ? 'bg-gray-900/90 border-gray-700' : 'bg-white/90 border-gray-200'
       }`}>
@@ -501,7 +508,7 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Enhanced Hero Section */}
+      {/* Hero Section */}
       <section id="home" className={`pt-16 min-h-screen flex items-center relative overflow-hidden ${
         darkMode ? 'bg-gradient-to-br from-gray-900 to-blue-900' : 'bg-gradient-to-br from-blue-50 to-indigo-100'
       }`}>
@@ -531,7 +538,6 @@ const Index = () => {
                 </span>
               </h1>
               
-              {/* Animated Code Typing */}
               <div className={`text-lg mb-8 font-mono p-4 rounded-lg border ${
                 darkMode ? 'bg-gray-800 border-gray-700 text-green-400' : 'bg-gray-100 border-gray-200 text-green-600'
               }`}>
@@ -576,7 +582,6 @@ const Index = () => {
                 </motion.div>
               </div>
 
-              {/* Contact Info with Icons */}
               <div className={`space-y-2 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 <motion.p className="flex items-center gap-2" whileHover={{ x: 5 }}>
                   <Mail className="w-4 h-4" />
@@ -637,7 +642,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Floating Shapes */}
         <motion.div 
           className="absolute top-20 right-20 w-20 h-20 bg-blue-400/20 rounded-full blur-xl"
           animate={{ 
@@ -656,7 +660,7 @@ const Index = () => {
         />
       </section>
 
-      {/* About Section - Enhanced */}
+      {/* About Section */}
       <section id="about" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
@@ -714,7 +718,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Interactive Timeline Section - Fixed */}
+      {/* Timeline Section */}
       <section id="timeline" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
@@ -728,76 +732,80 @@ const Index = () => {
           </motion.h2>
           
           <div className="relative max-w-4xl mx-auto">
-            {/* Modern Timeline Line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500 rounded-full shadow-lg"></div>
+            {/* Modern Timeline Line - Centered */}
+            <div className="absolute left-1/2 transform -translate-x-0.5 h-full w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500 rounded-full shadow-lg"></div>
             
             <div className="space-y-16">
-              {timeline.map((item, index) => (
-                <motion.div
-                  key={item.year}
-                  className={`relative flex items-center ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: index * 0.3 }}
-                >
-                  {/* Timeline Dot with Icon - Fixed hover animation */}
-                  <motion.div 
-                    className="absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center text-2xl z-10 cursor-pointer"
-                    whileHover={{ 
-                      scale: 1.15,
-                      rotate: 5,
-                      y: -2
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ 
-                      type: "spring", 
-                      stiffness: 300, 
-                      damping: 20,
-                      duration: 0.3
-                    }}
+              {timeline.map((item, index) => {
+                const IconComponent = item.icon;
+                return (
+                  <motion.div
+                    key={item.year}
+                    className={`relative flex items-center ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: index * 0.3 }}
                   >
-                    {item.icon}
-                  </motion.div>
-                  
-                  {/* Content Card */}
-                  <div className={`w-5/12 ${index % 2 === 0 ? 'pr-8' : 'pl-8'}`}>
-                    <motion.div
-                      whileHover={{ scale: 1.05, y: -10 }}
-                      className={`p-6 rounded-2xl shadow-2xl ${
-                        darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'
-                      } border-2 backdrop-blur-sm`}
+                    {/* Timeline Icon - Perfectly Centered */}
+                    <motion.div 
+                      className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center z-10 cursor-pointer"
+                      whileHover={{ 
+                        scale: 1.15,
+                        rotate: 10,
+                        y: -3,
+                        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 400, 
+                        damping: 17
+                      }}
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                          {item.year}
-                        </span>
-                        <Badge 
-                          variant={item.type === 'education' ? 'secondary' : 'default'}
-                          className={`text-xs font-medium ${
-                            item.type === 'education' 
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                              : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-                          }`}
-                        >
-                          {item.type}
-                        </Badge>
-                      </div>
-                      <h3 className={`text-base font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {item.title}
-                      </h3>
-                      <p className={`text-sm leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                        {item.description}
-                      </p>
+                      <IconComponent className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                     </motion.div>
-                  </div>
-                </motion.div>
-              ))}
+                    
+                    {/* Content Card */}
+                    <div className={`w-5/12 ${index % 2 === 0 ? 'pr-8' : 'pl-8'}`}>
+                      <motion.div
+                        whileHover={{ scale: 1.03, y: -5 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        className={`p-6 rounded-2xl shadow-xl ${
+                          darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'
+                        } border-2 backdrop-blur-sm`}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            {item.year}
+                          </span>
+                          <Badge 
+                            variant={item.type === 'education' ? 'secondary' : 'default'}
+                            className={`text-xs font-medium ${
+                              item.type === 'education' 
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                                : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                            }`}
+                          >
+                            {item.type}
+                          </Badge>
+                        </div>
+                        <h3 className={`text-sm font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {item.title}
+                        </h3>
+                        <p className={`text-xs leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          {item.description}
+                        </p>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Redesigned Skills Section */}
+      {/* Skills Section */}
       <section id="skills" className={`py-20 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
@@ -820,12 +828,10 @@ const Index = () => {
               >
                 <Card className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border-0`}>
                   <CardContent className="p-0">
-                    {/* Gradient Header */}
                     <div className={`bg-gradient-to-r ${category.color} text-white p-6`}>
                       <h3 className="text-lg font-bold text-center">{category.category}</h3>
                     </div>
 
-                    {/* Skills Grid */}
                     <div className="p-6">
                       <div className="flex flex-wrap gap-3">
                         {category.skills.map((skill, skillIndex) => (
@@ -863,7 +869,6 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className={`text-3xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Work Experience</h2>
           <div className="space-y-12">
-            {/* AEROGO FIRST */}
             <Card className={`${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white'} shadow-lg hover:shadow-xl transition-shadow duration-300`}>
               <CardContent className="p-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
@@ -906,7 +911,6 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            {/* AquaAirX SECOND */}
             <Card className={`${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white'} shadow-lg hover:shadow-xl transition-shadow duration-300`}>
               <CardContent className="p-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
@@ -957,7 +961,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Projects Section with Image Carousels and Breakout Effect */}
+      {/* Projects Section */}
       <section id="projects" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
@@ -981,7 +985,6 @@ const Index = () => {
               >
                 <Card className={`${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white'} shadow-lg hover:shadow-xl transition-all duration-300 h-full`}>
                   <CardContent className="p-6">
-                    {/* Project Header */}
                     <div className={`bg-gradient-to-r ${project.gradient} text-white p-6 rounded-lg mb-6`}>
                       <div className="flex justify-between items-start mb-4">
                         <div>
@@ -997,7 +1000,6 @@ const Index = () => {
                         )}
                       </div>
                       
-                      {/* Project Metrics */}
                       {project.metrics && (
                         <div className="grid grid-cols-3 gap-4 text-center">
                           <div>
@@ -1016,7 +1018,6 @@ const Index = () => {
                       )}
                     </div>
 
-                    {/* Image Carousel with Auto-rotation and Click to Enlarge */}
                     {project.images && (
                       <ProjectCarousel images={project.images} projectTitle={project.title} />
                     )}
@@ -1031,7 +1032,6 @@ const Index = () => {
                       </p>
                     )}
                     
-                    {/* Key Features */}
                     <div className="mb-6">
                       <h4 className={`font-semibold mb-3 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         Key Features:
@@ -1054,7 +1054,6 @@ const Index = () => {
                       </ul>
                     </div>
                     
-                    {/* Tech Stack */}
                     <div className="mb-6">
                       <h4 className={`font-semibold mb-3 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         Tech Stack:
@@ -1104,7 +1103,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Contact Section */}
+      {/* Contact Section */}
       <section id="contact" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
