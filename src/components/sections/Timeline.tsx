@@ -41,19 +41,9 @@ export const Timeline: React.FC<TimelineProps> = ({ darkMode }) => {
                   {/* Timeline Icon - Perfectly Centered on the line */}
                   <motion.div 
                     className="absolute left-1/2 top-1/2 w-16 h-16 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center z-10 cursor-pointer transform -translate-x-1/2 -translate-y-1/2"
-                    whileHover={{ 
-                      scale: 1.15,
-                      rotate: 10,
-                      y: -3,
-                      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                    }}
+                    
                     whileTap={{ scale: 0.95 }}
-                    transition={{ 
-                      type: "spring", 
-                      stiffness: 400, 
-                      damping: 17,
-                      y: { type: "spring", stiffness: 300, damping: 20 }
-                    }}
+      
                   >
                     <IconComponent className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </motion.div>

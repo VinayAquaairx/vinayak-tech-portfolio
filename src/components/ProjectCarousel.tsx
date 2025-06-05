@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselApi } from '@/components/ui/carousel';
 import { HoveredImageState } from '@/types';
 
 interface ProjectCarouselProps {
@@ -18,7 +17,34 @@ export const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isCarouselHovered, setIsCarouselHovered] = useState(false);
+  const [api, setApi] = useState<CarouselApi | undefined>(undefined);
 
+  // Sync the carousel's active index with currentIndex
+  useEffect(() => {
+    if (api) {
+      // When currentIndex changes, scroll the carousel to the corresponding index
+      api.scrollTo(currentIndex);
+    }
+  }, [currentIndex, api]);
+
+  // Set up the carousel API and listen for slide changes
+  useEffect(() => {
+    if (api) {
+      // Update currentIndex when the carousel's active slide changes (e.g., via prev/next buttons)
+      const onSelect = () => {
+        const selectedIndex = api.selectedScrollSnap();
+        setCurrentIndex(selectedIndex);
+      };
+
+      api.on('select', onSelect);
+
+      return () => {
+        api.off('select', onSelect);
+      };
+    }
+  }, [api]);
+
+  // Auto-slide effect
   useEffect(() => {
     if (!isCarouselHovered && images.length > 1) {
       const interval = setInterval(() => {
@@ -45,7 +71,7 @@ export const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
 
   return (
     <div className="relative mb-6">
-      <Carousel className="w-full" opts={{ loop: true }}>
+      <Carousel className="w-full" opts={{ loop: true }} setApi={setApi}>
         <CarouselContent>
           {images.map((image, imgIndex) => (
             <CarouselItem key={imgIndex}>
