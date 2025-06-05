@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail, Phone, MapPin, Download, ChevronLeft, ChevronRight, Moon, Sun, Code, Star, GitBranch, Calendar, ExternalLink, Trophy, Target, Zap, GraduationCap, Briefcase, Rocket } from 'lucide-react';
+import { Github, Linkedin, Mail, Phone, MapPin, Download, Moon, Sun, Code, Calendar, Target, GraduationCap, Briefcase, Rocket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Badge } from '@/components/ui/badge';
-import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -14,7 +14,7 @@ const Index = () => {
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, symbol: string}>>([]);
-  const [breakoutImage, setBreakoutImage] = useState<{url: string, x: number, y: number} | null>(null);
+  const [hoveredImage, setHoveredImage] = useState<{url: string, x: number, y: number} | null>(null);
 
   const codeSnippets = [
     "const developer = 'Vinayak';",
@@ -66,38 +66,32 @@ const Index = () => {
     );
   };
 
-  // Enhanced Carousel Component with proper hover and click handling
+  // Enhanced Carousel Component with hover breakout zoom effect
   const ProjectCarousel = ({ images, projectTitle }: { images: string[], projectTitle: string }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isHovered, setIsHovered] = useState(false);
-    const [hoveredImage, setHoveredImage] = useState<string | null>(null);
+    const [isCarouselHovered, setIsCarouselHovered] = useState(false);
 
     useEffect(() => {
-      if (!isHovered && images.length > 1) {
+      if (!isCarouselHovered && images.length > 1) {
         const interval = setInterval(() => {
           setCurrentIndex((prev) => (prev + 1) % images.length);
         }, 3000);
         return () => clearInterval(interval);
       }
-    }, [images.length, isHovered]);
+    }, [images.length, isCarouselHovered]);
 
-    const handleImageClick = (imageUrl: string, event: React.MouseEvent) => {
-      event.stopPropagation();
-      const rect = event.currentTarget.getBoundingClientRect();
-      setBreakoutImage({
-        url: imageUrl,
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
-      });
-    };
-
-    const handleImageHover = (imageUrl: string, isEntering: boolean) => {
+    const handleImageHover = (imageUrl: string, event: React.MouseEvent, isEntering: boolean) => {
       if (isEntering) {
-        setHoveredImage(imageUrl);
-        setIsHovered(true);
+        const rect = event.currentTarget.getBoundingClientRect();
+        setHoveredImage({
+          url: imageUrl,
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2
+        });
+        setIsCarouselHovered(true);
       } else {
         setHoveredImage(null);
-        setIsHovered(false);
+        setIsCarouselHovered(false);
       }
     };
 
@@ -108,19 +102,18 @@ const Index = () => {
             {images.map((image, imgIndex) => (
               <CarouselItem key={imgIndex}>
                 <div 
-                  className="relative group cursor-pointer"
-                  onMouseEnter={() => handleImageHover(image, true)}
-                  onMouseLeave={() => handleImageHover(image, false)}
-                  onClick={(e) => handleImageClick(image, e)}
+                  className="relative group cursor-pointer overflow-hidden rounded-lg"
+                  onMouseEnter={(e) => handleImageHover(image, e, true)}
+                  onMouseLeave={(e) => handleImageHover(image, e, false)}
                 >
                   <img
                     src={image}
                     alt={`${projectTitle} Screenshot ${imgIndex + 1}`}
-                    className="w-full h-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <span className="text-white font-medium bg-black/60 px-3 py-1 rounded-full text-sm backdrop-blur-sm">
-                      Click to view full image
+                      Hover to view full image
                     </span>
                   </div>
                 </div>
@@ -441,32 +434,28 @@ const Index = () => {
 
       {/* Image Breakout Overlay */}
       <AnimatePresence>
-        {breakoutImage && (
+        {hoveredImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer"
-            onClick={() => setBreakoutImage(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm pointer-events-none"
           >
             <motion.img
-              src={breakoutImage.url}
+              src={hoveredImage.url}
               alt="Project Screenshot"
-              className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              className="max-w-[80vw] max-h-[80vh] object-contain rounded-lg shadow-2xl"
               initial={{ scale: 0.3, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.3, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             />
-            <div className="absolute top-4 right-4 text-white bg-black/50 px-3 py-1 rounded-full text-sm backdrop-blur-sm">
-              Click anywhere to close
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Fixed Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 backdrop-blur-md border-b z-50 transition-colors duration-500 ${
+      <nav className={`fixed top-0 left-0 right-0 backdrop-blur-md border-b z-40 transition-colors duration-500 ${
         darkMode ? 'bg-gray-900/90 border-gray-700' : 'bg-white/90 border-gray-200'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -732,8 +721,8 @@ const Index = () => {
           </motion.h2>
           
           <div className="relative max-w-4xl mx-auto">
-            {/* Modern Timeline Line - Centered */}
-            <div className="absolute left-1/2 transform -translate-x-0.5 h-full w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500 rounded-full shadow-lg"></div>
+            {/* Timeline Line - Perfectly Centered */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500 rounded-full shadow-lg transform -translate-x-0.5"></div>
             
             <div className="space-y-16">
               {timeline.map((item, index) => {
@@ -746,9 +735,9 @@ const Index = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, delay: index * 0.3 }}
                   >
-                    {/* Timeline Icon - Perfectly Centered */}
+                    {/* Timeline Icon - Perfectly Centered on the line */}
                     <motion.div 
-                      className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center z-10 cursor-pointer"
+                      className="absolute left-1/2 top-1/2 w-16 h-16 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center z-10 cursor-pointer transform -translate-x-1/2 -translate-y-1/2"
                       whileHover={{ 
                         scale: 1.15,
                         rotate: 10,
@@ -759,7 +748,8 @@ const Index = () => {
                       transition={{ 
                         type: "spring", 
                         stiffness: 400, 
-                        damping: 17
+                        damping: 17,
+                        y: { type: "spring", stiffness: 300, damping: 20 }
                       }}
                     >
                       <IconComponent className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -775,7 +765,7 @@ const Index = () => {
                         } border-2 backdrop-blur-sm`}
                       >
                         <div className="flex items-center justify-between mb-4">
-                          <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                          <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                             {item.year}
                           </span>
                           <Badge 
