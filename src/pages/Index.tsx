@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Github, Linkedin, Mail, Phone, MapPin, Download, ChevronLeft, ChevronRight, Moon, Sun, Code, Star, GitBranch, Calendar, ExternalLink, Trophy, Target, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -120,24 +121,30 @@ const Index = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Scroll spy functionality - Fixed
+  // Fixed scroll spy functionality
   useEffect(() => {
     setIsLoaded(true);
 
     const handleScroll = () => {
       const sections = ['home', 'about', 'experience', 'skills', 'projects', 'timeline', 'contact'];
-      const scrollPosition = window.scrollY + 100;
+      const scrollPosition = window.scrollY + 200; // Increased offset for better detection
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
-          break;
+        if (section) {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          
+          if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            setActiveSection(sections[i]);
+            break;
+          }
         }
       }
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Call once to set initial state
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -224,11 +231,6 @@ const Index = () => {
       gradient: 'from-blue-500 to-cyan-600',
       companyProject: true,
       metrics: { lines: '25,000+', time: '6 months', team: '3 developers' },
-      images: [
-        '/src/assets/images/projects/web-gcs/image1.png',
-        '/src/assets/images/projects/web-gcs/image2.png',
-        '/src/assets/images/projects/web-gcs/image3.png'
-      ],
       folder: 'web-gcs'
     },
     {
@@ -261,6 +263,10 @@ const Index = () => {
       ],
       tech: ['Python', 'OpenCV', 'MediaPipe', 'CVZone', 'PyAutoGUI'],
       gradient: 'from-indigo-500 to-purple-600',
+      images: [
+        '/src/assets/images/projects/plantsage/image1.png',
+        '/src/assets/images/projects/plantsage/image2.png'
+      ],
       folder: 'virtual-keyboard'
     },
     {
@@ -277,6 +283,10 @@ const Index = () => {
       ],
       tech: ['Unity', 'C#', '2D Physics', 'Animation System'],
       gradient: 'from-yellow-500 to-orange-600',
+      images: [
+        '/src/assets/images/projects/plantsage/image1.png',
+        '/src/assets/images/projects/plantsage/image3.png'
+      ],
       folder: 'flappy-bird'
     },
     {
@@ -292,6 +302,10 @@ const Index = () => {
       ],
       tech: ['Python', 'NLP', 'Speech Recognition'],
       gradient: 'from-pink-500 to-rose-600',
+      images: [
+        '/src/assets/images/projects/plantsage/image2.png',
+        '/src/assets/images/projects/plantsage/image1.png'
+      ],
       folder: 'havi-ai'
     }
   ];
@@ -354,35 +368,35 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
             onClick={() => setBreakoutImage(null)}
           >
             <motion.img
               src={breakoutImage.url}
               alt="Project Screenshot"
-              className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-              initial={{ scale: 0.5, opacity: 0 }}
+              className="max-w-[85vw] max-h-[85vh] object-contain rounded-lg shadow-2xl"
+              initial={{ scale: 0.3, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              exit={{ scale: 0.3, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
             />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Enhanced Navigation - Updated */}
+      {/* Enhanced Navigation - Fixed */}
       <nav className={`fixed top-0 left-0 right-0 backdrop-blur-md border-b z-50 transition-colors duration-500 ${
         darkMode ? 'bg-gray-900/90 border-gray-700' : 'bg-white/90 border-gray-200'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <motion.div 
-              className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
               whileHover={{ scale: 1.05 }}
             >
               K.S.S.Vinayak
             </motion.div>
-            <div className="hidden md:flex space-x-8">
+            <div className="hidden md:flex space-x-6">
               {['Home', 'About', 'Experience', 'Skills', 'Projects', 'Timeline', 'Contact'].map((item) => (
                 <motion.button
                   key={item}
@@ -428,13 +442,13 @@ const Index = () => {
               transition={{ duration: 0.8 }}
             >
               <motion.div 
-                className="text-lg text-blue-600 dark:text-blue-400 font-medium mb-4"
+                className="text-base text-blue-600 dark:text-blue-400 font-medium mb-4"
                 animate={{ y: [0, -5, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
                 Hi, I'm Vinayak 👋
               </motion.div>
-              <h1 className={`text-5xl lg:text-6xl font-bold mb-6 leading-tight ${
+              <h1 className={`text-4xl lg:text-5xl font-bold mb-6 leading-tight ${
                 darkMode ? 'text-white' : 'text-gray-900'
               }`}>
                 GCS Developer &<br />
@@ -444,7 +458,7 @@ const Index = () => {
               </h1>
               
               {/* Animated Code Typing */}
-              <div className={`text-xl mb-8 font-mono p-4 rounded-lg border ${
+              <div className={`text-lg mb-8 font-mono p-4 rounded-lg border ${
                 darkMode ? 'bg-gray-800 border-gray-700 text-green-400' : 'bg-gray-100 border-gray-200 text-green-600'
               }`}>
                 <span className="text-gray-500"># </span>
@@ -458,7 +472,7 @@ const Index = () => {
                 </motion.span>
               </div>
 
-              <p className={`text-xl mb-8 leading-relaxed ${
+              <p className={`text-lg mb-8 leading-relaxed ${
                 darkMode ? 'text-gray-300' : 'text-gray-600'
               }`}>
                 Specializing in Autonomous Navigation & Real-time Telemetry Systems
@@ -468,7 +482,7 @@ const Index = () => {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button 
                     onClick={() => scrollToSection('projects')}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-full text-lg"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-full text-base"
                   >
                     View My Work
                   </Button>
@@ -476,7 +490,7 @@ const Index = () => {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button 
                     variant="outline" 
-                    className={`border-2 px-8 py-3 rounded-full text-lg transition-colors duration-300 ${
+                    className={`border-2 px-8 py-3 rounded-full text-base transition-colors duration-300 ${
                       darkMode 
                         ? 'border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-white' 
                         : 'border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white'
@@ -489,7 +503,7 @@ const Index = () => {
               </div>
 
               {/* Contact Info with Icons */}
-              <div className={`space-y-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <div className={`space-y-2 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 <motion.p className="flex items-center gap-2" whileHover={{ x: 5 }}>
                   <Mail className="w-4 h-4" />
                   vinayakkommisetti@gmail.com
@@ -572,7 +586,7 @@ const Index = () => {
       <section id="about" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
-            className={`text-4xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
+            className={`text-3xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -585,10 +599,10 @@ const Index = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <p className={`text-lg leading-relaxed mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <p className={`text-base leading-relaxed mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 GCS Developer with <span className="font-semibold text-blue-600 dark:text-blue-400">11 months of hands-on experience</span> in building both web-based and software-based Ground Control Station for UAVs and underwater vehicles. Proficient in MAVLink, ROS2, and Ardupilot simulations, with a strong background in real-time telemetry, mission planning, and autonomous navigation.
               </p>
-              <p className={`text-lg leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <p className={`text-base leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 Passionate about improving drone autonomy through advanced control systems and simulation testing.
               </p>
             </motion.div>
@@ -609,14 +623,14 @@ const Index = () => {
                   <Card className={`bg-gradient-to-br from-${stat.color}-50 to-${stat.color}-100 border-${stat.color}-200 dark:from-${stat.color}-900 dark:to-${stat.color}-800 dark:border-${stat.color}-700`}>
                     <CardContent className="p-6 text-center">
                       <motion.div 
-                        className={`text-3xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400 mb-2`}
+                        className={`text-2xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400 mb-2`}
                         initial={{ scale: 0 }}
                         whileInView={{ scale: 1 }}
                         transition={{ duration: 0.8, delay: index * 0.2 }}
                       >
                         {stat.value}
                       </motion.div>
-                      <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{stat.label}</div>
+                      <div className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{stat.label}</div>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -626,16 +640,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Interactive Timeline Section - Redesigned */}
+      {/* Interactive Timeline Section - Fixed hover animations */}
       <section id="timeline" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
-            className={`text-4xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
+            className={`text-3xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Calendar className="inline-block w-10 h-10 mr-4" />
+            <Calendar className="inline-block w-8 h-8 mr-4" />
             My Journey
           </motion.h2>
           
@@ -652,11 +666,16 @@ const Index = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: index * 0.3 }}
                 >
-                  {/* Timeline Dot with Icon */}
+                  {/* Timeline Dot with Icon - Fixed hover animation */}
                   <motion.div 
-                    className="absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center text-2xl z-10"
-                    whileHover={{ scale: 1.2, rotate: 360 }}
-                    transition={{ duration: 0.3 }}
+                    className="absolute left-1/2 transform -translate-x-1/2 w-14 h-14 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center text-xl z-10"
+                    whileHover={{ 
+                      scale: 1.2,
+                      rotate: 360,
+                      transition: { duration: 0.3 }
+                    }}
+                    whileTap={{ scale: 0.9 }}
+                    animate={{ scale: 1, rotate: 0 }}
                   >
                     {item.icon}
                   </motion.div>
@@ -665,12 +684,12 @@ const Index = () => {
                   <div className={`w-5/12 ${index % 2 === 0 ? 'pr-8' : 'pl-8'}`}>
                     <motion.div
                       whileHover={{ scale: 1.05, y: -10 }}
-                      className={`p-8 rounded-2xl shadow-2xl ${
+                      className={`p-6 rounded-2xl shadow-2xl ${
                         darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'
                       } border-2 backdrop-blur-sm`}
                     >
-                      <div className="flex items-center justify-between mb-6">
-                        <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                           {item.year}
                         </span>
                         <Badge 
@@ -684,10 +703,10 @@ const Index = () => {
                           {item.type}
                         </Badge>
                       </div>
-                      <h3 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h3 className={`text-lg font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         {item.title}
                       </h3>
-                      <p className={`text-lg leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <p className={`text-sm leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         {item.description}
                       </p>
                     </motion.div>
@@ -703,12 +722,12 @@ const Index = () => {
       <section id="skills" className={`py-20 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
-            className={`text-4xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
+            className={`text-3xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Target className="inline-block w-10 h-10 mr-4" />
+            <Target className="inline-block w-8 h-8 mr-4" />
             Skills & Expertise
           </motion.h2>
           <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
@@ -724,7 +743,7 @@ const Index = () => {
                   <CardContent className="p-0">
                     {/* Gradient Header */}
                     <div className={`bg-gradient-to-r ${category.color} text-white p-6`}>
-                      <h3 className="text-xl font-bold text-center">{category.category}</h3>
+                      <h3 className="text-lg font-bold text-center">{category.category}</h3>
                     </div>
 
                     {/* Skills Grid */}
@@ -740,7 +759,7 @@ const Index = () => {
                           >
                             <Badge 
                               variant="secondary"
-                              className={`px-4 py-2 text-sm font-medium rounded-full ${
+                              className={`px-3 py-1 text-sm font-medium rounded-full ${
                                 darkMode 
                                   ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' 
                                   : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
@@ -763,14 +782,14 @@ const Index = () => {
       {/* Experience Section */}
       <section id="experience" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-4xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Work Experience</h2>
+          <h2 className={`text-3xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Work Experience</h2>
           <div className="space-y-12">
             {/* AEROGO FIRST */}
             <Card className={`${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white'} shadow-lg hover:shadow-xl transition-shadow duration-300`}>
               <CardContent className="p-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
                   <div>
-                    <h3 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>AEROGO - Business Development Analyst</h3>
+                    <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>AEROGO - Business Development Analyst</h3>
                     <p className="text-orange-600 font-medium">12/2023 – 06/2024 | Bangalore, India</p>
                   </div>
                   <div className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
@@ -813,7 +832,7 @@ const Index = () => {
               <CardContent className="p-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
                   <div>
-                    <h3 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>AquaAirX - Software Development Engineer</h3>
+                    <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>AquaAirX - Software Development Engineer</h3>
                     <p className="text-blue-600 font-medium">06/2024 – Present | Bangalore, India</p>
                   </div>
                   <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
@@ -859,16 +878,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Projects Section with Image Carousels */}
+      {/* Enhanced Projects Section with Image Carousels and Breakout Effect */}
       <section id="projects" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
-            className={`text-4xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
+            className={`text-3xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Code className="inline-block w-10 h-10 mr-4" />
+            <Code className="inline-block w-8 h-8 mr-4" />
             Featured Projects
           </motion.h2>
           <div className="grid lg:grid-cols-2 gap-8">
@@ -881,15 +900,15 @@ const Index = () => {
                 whileHover={{ scale: 1.02, y: -5 }}
                 className={project.featured ? 'lg:col-span-2' : ''}
               >
-                <Card className={`${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white'} shadow-lg hover:shadow-xl transition-all duration-300`}>
-                  <CardContent className="p-8">
+                <Card className={`${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white'} shadow-lg hover:shadow-xl transition-all duration-300 h-full`}>
+                  <CardContent className="p-6">
                     {/* Project Header */}
                     <div className={`bg-gradient-to-r ${project.gradient} text-white p-6 rounded-lg mb-6`}>
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+                          <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                           {project.subtitle && (
-                            <p className="text-white/90 text-lg font-medium mb-2">{project.subtitle}</p>
+                            <p className="text-white/90 text-base font-medium mb-2">{project.subtitle}</p>
                           )}
                         </div>
                         {project.featured && (
@@ -903,25 +922,25 @@ const Index = () => {
                       {project.metrics && (
                         <div className="grid grid-cols-3 gap-4 text-center">
                           <div>
-                            <div className="text-lg font-bold">{project.metrics.lines}</div>
+                            <div className="text-base font-bold">{project.metrics.lines}</div>
                             <div className="text-xs opacity-80">Lines of Code</div>
                           </div>
                           <div>
-                            <div className="text-lg font-bold">{project.metrics.time}</div>
+                            <div className="text-base font-bold">{project.metrics.time}</div>
                             <div className="text-xs opacity-80">Development Time</div>
                           </div>
                           <div>
-                            <div className="text-lg font-bold">{project.metrics.team}</div>
+                            <div className="text-base font-bold">{project.metrics.team}</div>
                             <div className="text-xs opacity-80">Team Size</div>
                           </div>
                         </div>
                       )}
                     </div>
 
-                    {/* Image Carousel */}
+                    {/* Image Carousel with Breakout Effect */}
                     {project.images && (
-                      <div className="mb-6">
-                        <Carousel className="w-full">
+                      <div className="mb-6 relative">
+                        <Carousel className="w-full" opts={{ loop: true }}>
                           <CarouselContent>
                             {project.images.map((image, imgIndex) => (
                               <CarouselItem key={imgIndex}>
@@ -929,9 +948,9 @@ const Index = () => {
                                   <motion.img
                                     src={image}
                                     alt={`${project.title} Screenshot ${imgIndex + 1}`}
-                                    className="w-full h-64 object-cover rounded-lg cursor-pointer"
+                                    className="w-full h-48 object-cover rounded-lg cursor-pointer transition-all duration-300"
                                     whileHover={{ scale: 1.02 }}
-                                    onMouseEnter={(e) => {
+                                    onClick={(e) => {
                                       const rect = e.currentTarget.getBoundingClientRect();
                                       setBreakoutImage({
                                         url: image,
@@ -939,32 +958,35 @@ const Index = () => {
                                         y: rect.top + rect.height / 2
                                       });
                                     }}
-                                    onMouseLeave={() => setBreakoutImage(null)}
                                   />
-                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg"></div>
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                    <span className="text-white font-medium bg-black/50 px-3 py-1 rounded-full text-sm">
+                                      Click to enlarge
+                                    </span>
+                                  </div>
                                 </div>
                               </CarouselItem>
                             ))}
                           </CarouselContent>
-                          <CarouselPrevious />
-                          <CarouselNext />
+                          <CarouselPrevious className="left-2" />
+                          <CarouselNext className="right-2" />
                         </Carousel>
                       </div>
                     )}
                     
-                    <p className={`text-lg mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <p className={`text-base mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {project.description}
                     </p>
                     
                     {project.status && (
-                      <p className="text-blue-600 dark:text-blue-400 font-medium mb-4">
+                      <p className="text-blue-600 dark:text-blue-400 font-medium mb-4 text-sm">
                         Status: {project.status}
                       </p>
                     )}
                     
                     {/* Key Features */}
                     <div className="mb-6">
-                      <h4 className={`font-semibold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h4 className={`font-semibold mb-3 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         Key Features:
                       </h4>
                       <ul className="space-y-2">
@@ -987,7 +1009,7 @@ const Index = () => {
                     
                     {/* Tech Stack */}
                     <div className="mb-6">
-                      <h4 className={`font-semibold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h4 className={`font-semibold mb-3 text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         Tech Stack:
                       </h4>
                       <div className="flex flex-wrap gap-2">
@@ -995,7 +1017,7 @@ const Index = () => {
                           <motion.div key={tech} whileHover={{ scale: 1.05 }}>
                             <Badge 
                               variant="secondary"
-                              className={`${
+                              className={`text-xs ${
                                 darkMode ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-gray-700'
                               }`}
                             >
@@ -1016,16 +1038,16 @@ const Index = () => {
       {/* Education Section */}
       <section id="education" className={`py-20 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-4xl font-bold text-center text-gray-900 mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Education</h2>
+          <h2 className={`text-3xl font-bold text-center text-gray-900 mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Education</h2>
           <div className="max-w-2xl mx-auto">
             <Card className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} shadow-lg`}>
               <CardContent className="p-8">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-6">
                     LPU
                   </div>
-                  <h3 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Bachelor of Technology (CSE Honors)</h3>
-                  <p className={`text-lg mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Lovely Professional University</p>
+                  <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Bachelor of Technology (CSE Honors)</h3>
+                  <p className={`text-base mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Lovely Professional University</p>
                   <p className="text-blue-600 font-medium mb-2">2020 – 2024 | Phagwara, India</p>
                   <p className={`text-gray-600 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>GPA: 7.79</p>
                 </div>
@@ -1039,12 +1061,12 @@ const Index = () => {
       <section id="contact" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className={`text-4xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Get In Touch</h2>
-            <p className={`text-xl ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Let's build something amazing together</p>
+            <h2 className={`text-3xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Get In Touch</h2>
+            <p className={`text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Let's build something amazing together</p>
           </div>
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
-              <h3 className={`text-2xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Contact Information</h3>
+              <h3 className={`text-xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Contact Information</h3>
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -1088,7 +1110,7 @@ const Index = () => {
             </div>
             <Card className={`${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white'} shadow-lg`}>
               <CardContent className="p-8">
-                <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Send Me a Message</h3>
+                <h3 className={`text-lg font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Send Me a Message</h3>
                 <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                   <div>
                     <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Name</label>
