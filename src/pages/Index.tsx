@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Github, Linkedin, Mail, Phone, MapPin, Download, ChevronLeft, ChevronRight, Moon, Sun, Code, Star, GitBranch, Calendar, ExternalLink, Trophy, Target, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -67,6 +66,76 @@ const Index = () => {
     );
   };
 
+  // Enhanced Carousel Component with Auto-rotation and Click to Enlarge
+  const ProjectCarousel = ({ images, projectTitle }: { images: string[], projectTitle: string }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isHovered, setIsHovered] = useState(false);
+
+    useEffect(() => {
+      if (!isHovered && images.length > 1) {
+        const interval = setInterval(() => {
+          setCurrentIndex((prev) => (prev + 1) % images.length);
+        }, 3000);
+        return () => clearInterval(interval);
+      }
+    }, [images.length, isHovered]);
+
+    const handleImageClick = (imageUrl: string, event: React.MouseEvent) => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      setBreakoutImage({
+        url: imageUrl,
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      });
+    };
+
+    return (
+      <div 
+        className="relative mb-6"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <Carousel className="w-full" opts={{ loop: true }}>
+          <CarouselContent>
+            {images.map((image, imgIndex) => (
+              <CarouselItem key={imgIndex}>
+                <div className="relative group">
+                  <motion.img
+                    src={image}
+                    alt={`${projectTitle} Screenshot ${imgIndex + 1}`}
+                    className="w-full h-48 object-cover rounded-lg cursor-pointer transition-all duration-300"
+                    whileHover={{ scale: 1.02 }}
+                    onClick={(e) => handleImageClick(image, e)}
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <span className="text-white font-medium bg-black/50 px-3 py-1 rounded-full text-sm">
+                      Click to enlarge
+                    </span>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </Carousel>
+        
+        {/* Dots indicator */}
+        <div className="flex justify-center mt-3 space-x-2">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                index === currentIndex ? 'bg-blue-500' : 'bg-gray-300'
+              }`}
+              onClick={() => setCurrentIndex(index)}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   // Typing animation effect
   useEffect(() => {
     const currentCode = codeSnippets[currentCodeIndex];
@@ -126,13 +195,13 @@ const Index = () => {
     setIsLoaded(true);
 
     const handleScroll = () => {
-      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'timeline', 'contact'];
-      const scrollPosition = window.scrollY + 200; // Increased offset for better detection
+      const sections = ['home', 'about', 'timeline', 'skills', 'experience', 'projects', 'contact'];
+      const scrollPosition = window.scrollY + 100;
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
         if (section) {
-          const sectionTop = section.offsetTop;
+          const sectionTop = section.offsetTop - 80; // Account for fixed header
           const sectionHeight = section.offsetHeight;
           
           if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
@@ -151,7 +220,12 @@ const Index = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const offset = 80; // Account for fixed header
+      const elementPosition = element.offsetTop - offset;
+      window.scrollTo({ 
+        top: elementPosition, 
+        behavior: 'smooth' 
+      });
       setActiveSection(sectionId);
     }
   };
@@ -397,7 +471,7 @@ const Index = () => {
               K.S.S.Vinayak
             </motion.div>
             <div className="hidden md:flex space-x-6">
-              {['Home', 'About', 'Experience', 'Skills', 'Projects', 'Timeline', 'Contact'].map((item) => (
+              {['Home', 'About', 'Timeline', 'Skills', 'Experience', 'Projects', 'Contact'].map((item) => (
                 <motion.button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
@@ -640,16 +714,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Interactive Timeline Section - Fixed hover animations */}
+      {/* Interactive Timeline Section - Fixed */}
       <section id="timeline" className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
-            className={`text-3xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
+            className={`text-2xl font-bold text-center mb-16 ${darkMode ? 'text-white' : 'text-gray-900'}`}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Calendar className="inline-block w-8 h-8 mr-4" />
+            <Calendar className="inline-block w-6 h-6 mr-4" />
             My Journey
           </motion.h2>
           
@@ -668,14 +742,19 @@ const Index = () => {
                 >
                   {/* Timeline Dot with Icon - Fixed hover animation */}
                   <motion.div 
-                    className="absolute left-1/2 transform -translate-x-1/2 w-14 h-14 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center text-xl z-10"
+                    className="absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-white dark:bg-gray-800 rounded-full border-4 border-blue-500 shadow-xl flex items-center justify-center text-2xl z-10 cursor-pointer"
                     whileHover={{ 
-                      scale: 1.2,
-                      rotate: 360,
-                      transition: { duration: 0.3 }
+                      scale: 1.15,
+                      rotate: 5,
+                      y: -2
                     }}
-                    whileTap={{ scale: 0.9 }}
-                    animate={{ scale: 1, rotate: 0 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 300, 
+                      damping: 20,
+                      duration: 0.3
+                    }}
                   >
                     {item.icon}
                   </motion.div>
@@ -689,7 +768,7 @@ const Index = () => {
                       } border-2 backdrop-blur-sm`}
                     >
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                           {item.year}
                         </span>
                         <Badge 
@@ -703,7 +782,7 @@ const Index = () => {
                           {item.type}
                         </Badge>
                       </div>
-                      <h3 className={`text-lg font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h3 className={`text-base font-bold mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         {item.title}
                       </h3>
                       <p className={`text-sm leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -937,41 +1016,9 @@ const Index = () => {
                       )}
                     </div>
 
-                    {/* Image Carousel with Breakout Effect */}
+                    {/* Image Carousel with Auto-rotation and Click to Enlarge */}
                     {project.images && (
-                      <div className="mb-6 relative">
-                        <Carousel className="w-full" opts={{ loop: true }}>
-                          <CarouselContent>
-                            {project.images.map((image, imgIndex) => (
-                              <CarouselItem key={imgIndex}>
-                                <div className="relative group">
-                                  <motion.img
-                                    src={image}
-                                    alt={`${project.title} Screenshot ${imgIndex + 1}`}
-                                    className="w-full h-48 object-cover rounded-lg cursor-pointer transition-all duration-300"
-                                    whileHover={{ scale: 1.02 }}
-                                    onClick={(e) => {
-                                      const rect = e.currentTarget.getBoundingClientRect();
-                                      setBreakoutImage({
-                                        url: image,
-                                        x: rect.left + rect.width / 2,
-                                        y: rect.top + rect.height / 2
-                                      });
-                                    }}
-                                  />
-                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                    <span className="text-white font-medium bg-black/50 px-3 py-1 rounded-full text-sm">
-                                      Click to enlarge
-                                    </span>
-                                  </div>
-                                </div>
-                              </CarouselItem>
-                            ))}
-                          </CarouselContent>
-                          <CarouselPrevious className="left-2" />
-                          <CarouselNext className="right-2" />
-                        </Carousel>
-                      </div>
+                      <ProjectCarousel images={project.images} projectTitle={project.title} />
                     )}
                     
                     <p className={`text-base mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
